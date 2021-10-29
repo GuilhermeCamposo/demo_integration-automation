@@ -1,0 +1,16 @@
+---
+
+- name: Enable User Workload Monitoring
+  k8s:
+    state: present
+    kind: ConfigMap
+    api_version: v1
+    definition:
+      metadata:
+        name: cluster-monitoring-config
+        namespace: openshift-monitoring
+      data:
+        config.yaml: |
+          enableUserWorkload: true
+
+  

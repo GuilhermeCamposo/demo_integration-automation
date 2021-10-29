@@ -1,0 +1,17 @@
+---
+
+- name: Check Pipelines Subscription
+  k8s:
+    state: present
+    kind: Subscription
+    api_version: operators.coreos.com/v1alpha1
+    definition:
+      metadata:
+        name: openshift-pipelines-operator
+        namespace: openshift-operators
+      spec:
+        installPlanApproval: Automatic
+        channel:  stable
+        name: openshift-pipelines-operator-rh
+        source: redhat-operators
+        sourceNamespace: openshift-marketplace

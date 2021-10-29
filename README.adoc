@@ -1,0 +1,18 @@
+= Red Hat Integration Demo
+
+Automation to deploy the Red Hat Integration Demo.
+
+== Install The Demo Using Ansible
+
+=== Parameters
+
+[options="header"]
+|=======================
+| Parameter | Example Value                                      | Definition
+| token | sha256~vFanQbthlPKfsaldJT3bdLXIyEkd7ypO_XPygY1DNtQ | access token for a user with cluster-admin previleges
+| server    | https://api.mycluster.opentlc.com:6443      | OpenShift cluster API URL
+|=======================
+
+=== Running the playbook
+
+    ansible-playbook -e token= -e server=  install-demo.yml
