@@ -1,0 +1,36 @@
+- name: Create '{{ cicd_project }}' project
+  k8s:
+    state: present
+    kind: Project
+    api_version: project.openshift.io/v1
+    definition:
+      metadata:
+        name: "{{ cicd_project }}"
+        annotations:
+          openshift.io/description: ""
+          openshift.io/display-name: "RHI Demo CICD Project"
+
+- name: Evaluate PVCs
+  k8s:
+    state: present
+    resource_definition: "{{ lookup('template', 'tekton_pvcs.yml.j2') }}"
+
+- name: Evaluate maven Task
+  k8s:
+    state: present
+    resource_definition: "{{ lookup('template', 'tekton_task_maven.yml.j2') }}"
+
+- name: Evaluate buildah Task
+  k8s:
+    state: present
+    resource_definition: "{{ lookup('template', 'tekton_task_buildah.yml.j2') }}"
+
+- name: Evaluate salesforce-webhook-ingestor Pipeline
+  k8s:
+    state: present
+    resource_definition: "{{ lookup('template', 'tekton_pipeline_ingestor.yml.j2') }}"
+
+- name: Evaluate asana-adapter Pipeline
+  k8s:
+    state: present
+    resource_definition: "{{ lookup('template', 'tekton_pipeline_asana_adapter.yml.j2') }}"

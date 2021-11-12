@@ -3,6 +3,10 @@
   vars:
     demo_delete: false
     demo_project: rhi-demo
+    cicd_project: rhi-demo-cicd
+    registry_url: quay.io/gcamposo
+    ingestor_git: https://gitlab.com/rhi-demo/salesforce-webhook-ingestor.git
+    asana_adapter_git: https://gitlab.com/rhi-demo/asana-adapter.git
     insecure_skip_tls_verify: true
   tasks:
 
@@ -35,4 +39,10 @@
       include_tasks: tasks/provision_log_stack.yml
 
     - name: Enable Pipelines
-      include_tasks: tasks/provision_pipelines.yml      
+      include_tasks: tasks/provision_pipelines.yml
+
+    - name: Provision RHI Demo Pipelines
+      include_tasks: tasks/provision_demo_pipelines.yml
+
+    - name: Enable GitOps
+      include_tasks: tasks/provision_gitops.yml

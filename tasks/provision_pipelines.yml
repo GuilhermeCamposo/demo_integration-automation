@@ -15,3 +15,13 @@
         name: openshift-pipelines-operator-rh
         source: redhat-operators
         sourceNamespace: openshift-marketplace
+
+- name: Waiting for Pipeline Subscription to complete
+  shell: |
+    set -o pipefail && oc get csv -n openshift-operators | grep redhat-openshift-pipelines
+  register: install_status
+  until: "'Succeeded' in install_status.stdout"
+  retries: 20
+  delay: 15
+  args:
+    executable: /bin/bash
