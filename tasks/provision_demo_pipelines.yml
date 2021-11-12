@@ -15,11 +15,6 @@
     state: present
     resource_definition: "{{ lookup('template', 'tekton_pvcs.yml.j2') }}"
 
-- name: Evaluate maven Task
-  k8s:
-    state: present
-    resource_definition: "{{ lookup('template', 'tekton_task_maven.yml.j2') }}"
-
 - name: Evaluate buildah Task
   k8s:
     state: present

@@ -41,12 +41,13 @@ spec:
         - name: GOALS
           value:
             - '-DskipTests'
+            - -Dmaven.repo.local=$(workspaces.maven-settings.path)
             - clean
             - package
       runAfter:
         - fetch-repository
       taskRef:
-        kind: Task
+        kind: ClusterTask
         name: maven
       workspaces:
         - name: maven-settings
