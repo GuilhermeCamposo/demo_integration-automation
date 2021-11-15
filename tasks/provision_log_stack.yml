@@ -80,7 +80,7 @@
           name: cluster-logging
           source: redhat-operators
           sourceNamespace: openshift-marketplace
-
+# TODO replace this with a smatter way of checking
 - name: Wait for the deployments to be created
   pause:
       minutes: 2

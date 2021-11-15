@@ -23,3 +23,7 @@ Automation to deploy the Red Hat Integration Demo.
 === Running the playbook
 
     ansible-playbook -e token= -e server=  install-demo.yml
+
+=== Running the pipelines
+
+Before running the pipelines you need to supply the required credentials to the repository you are using. Create a secret call *quay-secret* in the CI/CD namespace.

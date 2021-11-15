@@ -1,3 +1,8 @@
+# TODO replace this with a smatter way of checking
+- name: Wait for the Operator APIs to be ready
+  pause:
+      minutes: 2
+
 - name: Create '{{ cicd_project }}' project
   k8s:
     state: present
@@ -19,6 +24,11 @@
   k8s:
     state: present
     resource_definition: "{{ lookup('template', 'tekton_task_buildah.yml.j2') }}"
+
+- name: Evaluate maven-version Task
+  k8s:
+    state: present
+    resource_definition: "{{ lookup('template', 'tekton_task_maven_version.yml.j2') }}"    
 
 - name: Evaluate salesforce-webhook-ingestor Pipeline
   k8s:
