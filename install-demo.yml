@@ -29,8 +29,8 @@
               openshift.io/description: ""
               openshift.io/display-name: "RHI Demo Project"
 
-    - name: Provision Camel K Operator
-      include_tasks: tasks/provision_camelk.yml
+    # - name: Provision Camel K Operator
+    #   include_tasks: tasks/provision_camelk.yml
 
     - name: Enable User Monitoring
       include_tasks: tasks/enable_user_project_monitoring.yml

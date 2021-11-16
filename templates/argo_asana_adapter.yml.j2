@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: asana-adapter
+  namespace: openshift-gitops
+spec:
+  destination:
+    name: ''
+    namespace: '{{ demo_project }}'
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: argo
+    repoURL: '{{ asana_adapter_git }}'
+    targetRevision: main
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: salesforce-webhook-ingestor
+  namespace: openshift-gitops
+spec:
+  destination:
+    name: ''
+    namespace: '{{ demo_project }}'
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: argo
+    repoURL: '{{ ingestor_git }}'
+    targetRevision: main
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

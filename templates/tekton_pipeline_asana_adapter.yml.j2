@@ -89,15 +89,15 @@ spec:
         - name: source
           workspace: shared-workspace
 
-    - name: promote-prod
-      runAfter:
-        - build-push-image
-      taskRef:
-        kind: ClusterTask
-        name: openshift-client
-      params:
-        - name: SCRIPT
-          value: oc import-image asana-adapter:prod -n {{ demo_project }} --from=$(params.IMAGE_REGISTRY):$(tasks.maven-version.results.version) --confirm
+    # - name: promote-prod
+    #   runAfter:
+    #     - build-push-image
+    #   taskRef:
+    #     kind: ClusterTask
+    #     name: openshift-client
+    #   params:
+    #     - name: SCRIPT
+    #       value: oc import-image asana-adapter:prod -n {{ demo_project }} --from=$(params.IMAGE_REGISTRY):$(tasks.maven-version.results.version) --confirm
 
   workspaces:
     - name: shared-workspace
