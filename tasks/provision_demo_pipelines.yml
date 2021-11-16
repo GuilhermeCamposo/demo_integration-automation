@@ -3,7 +3,7 @@
   pause:
       minutes: 2
 
-- name: Create '{{ cicd_project }}' project
+- name: Evaluate '{{ cicd_project }}' project
   k8s:
     state: present
     kind: Project
@@ -14,6 +14,24 @@
         annotations:
           openshift.io/description: ""
           openshift.io/display-name: "RHI Demo CICD Project"
+
+- name: Evalute Pipeline ServiceAccount Permissions
+  k8s:
+    state: present
+    api_version: rbac.authorization.k8s.io/v1
+    kind: RoleBinding
+    definition:
+      metadata:
+        name: pipeline-edit
+        namespace: '{{ demo_project }}'
+      roleRef:
+        apiGroup: rbac.authorization.k8s.io
+        kind: ClusterRole
+        name: edit
+      subjects:
+      - kind: ServiceAccount
+        name: pipeline
+        namespace: '{{ cicd_project }}'
 
 - name: Evaluate PVCs
   k8s:
@@ -28,7 +46,7 @@
 - name: Evaluate maven-version Task
   k8s:
     state: present
-    resource_definition: "{{ lookup('template', 'tekton_task_maven_version.yml.j2') }}"    
+    resource_definition: "{{ lookup('template', 'tekton_task_maven_version.yml.j2') }}"
 
 - name: Evaluate salesforce-webhook-ingestor Pipeline
   k8s:

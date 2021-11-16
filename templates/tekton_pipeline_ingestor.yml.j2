@@ -34,7 +34,8 @@ spec:
       workspaces:
         - name: output
           workspace: shared-workspace
-    - name: maven-run
+
+    - name: maven-build
       params:
         - name: CONTEXT_DIR
           value: .
@@ -54,6 +55,22 @@ spec:
           workspace: maven-settings
         - name: source
           workspace: shared-workspace
+
+    - name: maven-version
+      params:
+        - name: CONTEXT_DIR
+          value: .
+      runAfter:
+        - maven-build
+      taskRef:
+        kind: Task
+        name: maven-version
+      workspaces:
+        - name: maven-settings
+          workspace: maven-settings
+        - name: source
+          workspace: shared-workspace
+
     - name: build-push-image
       params:
         - name: CONTEXT
@@ -61,17 +78,27 @@ spec:
         - name: DOCKERFILE
           value: src/main/docker/Dockerfile.jvm
         - name: IMAGE
-          value: '$(params.IMAGE_REGISTRY):$(params.IMAGE_TAG)'
+          value: '$(params.IMAGE_REGISTRY):$(tasks.maven-version.results.version)'
         - name: TLSVERIFY
           value: 'true'
       runAfter:
-        - maven-run
+        - maven-version
       taskRef:
         kind: Task
         name: buildah-build-push
       workspaces:
         - name: source
           workspace: shared-workspace
+
+    - name: promote-prod
+      runAfter:
+        - build-push-image
+      taskRef:
+        kind: ClusterTask
+        name: openshift-client
+      params:
+        - name: SCRIPT
+          value: oc import-image salesforce-webhook-ingestor:prod -n {{ demo_project }}  --from=$(params.IMAGE_REGISTRY):$(tasks.maven-version.results.version) --confirm
   workspaces:
     - name: shared-workspace
     - name: maven-settings
