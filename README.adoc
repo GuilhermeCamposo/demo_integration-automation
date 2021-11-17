@@ -4,10 +4,10 @@ Automation to deploy the Red Hat Integration Demo.
 
 == Tools available
 
-. Camel K Operator
-. OpenShift Logging
-. OpenShift Pipelines
-. OpenShift GitOps
+- Camel K Operator
+- OpenShift Logging
+- OpenShift Pipelines
+- OpenShift GitOps
 
 
 == Install The Demo Using Ansible
@@ -21,10 +21,24 @@ Automation to deploy the Red Hat Integration Demo.
 | server    | https://api.mycluster.opentlc.com:6443      | OpenShift cluster API URL
 |=======================
 
+=== Create an extra-vars file
+
+Before running the Ansible playbook you must create a file to set some required credentials por the applications. You can use the following text as an template.
+
+
+----
+asana_pat:
+asana_workspace_gid:
+asana_project_gid:
+sf_client_id:
+sf_client_secret:
+sf_username:
+sf_password:
+sf_instance:
+docker_config:
+----
+
+
 === Running the playbook
 
-    ansible-playbook -e token= -e server=  install-demo.yml
-
-=== Running the pipelines
-
-Before running the pipelines you need to supply the required credentials to the repository you are using. Create a secret call *quay-secret* in the CI/CD namespace.
+    ansible-playbook -e token= -e server=  --extra-vars @extra-vars.yml install-demo.yml

@@ -33,6 +33,11 @@
         name: pipeline
         namespace: '{{ cicd_project }}'
 
+- name: Evaluate quay-secret
+  k8s:
+    state: present
+    resource_definition: "{{ lookup('template', 'secret_quay.yml.j2') }}"
+
 - name: Evaluate PVCs
   k8s:
     state: present
