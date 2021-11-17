@@ -44,18 +44,9 @@
         namespace: openshift-gitops
 
 - name: Evaluate salesforce-secret exists
-  k8s_info:
-    api_version: v1
-    kind: Secret
-    name: salesforce-secret
-    namespace: '{{ demo_project }}'
-  register: r_sf_secret
-
-- name: Create salesforce-secret
-  command: "oc create secret generic salesforce-secret --from-literal=SF_CLIENT_ID={{ sf_client_id }} --from-literal=SF_CLIENT_SECRET={{ sf_client_secret }} --from-literal=SF_USERNAME={{ sf_username }} --from-literal=SF_PASSWORD={{ sf_password }} --from-literal=SF_INSTANCE={{ sf_instance }} -n {{ demo_project }}"
-  when:
-   - r_sf_secret.resources | list | length == 0
-  ignore_errors: no
+  k8s:
+    state: present
+    resource_definition: "{{ lookup('template', 'secret_salesforce.yml.j2') }}"
 
 - name: Evaluate salesforce-webhook-ingestor GitOps Application
   k8s:
@@ -63,18 +54,9 @@
     resource_definition: "{{ lookup('template', 'argo_ingestor.yml.j2') }}"
 
 - name: Evaluate asana-secret exists
-  k8s_info:
-    api_version: v1
-    kind: Secret
-    name: asana-secret
-    namespace: '{{ demo_project }}'
-  register: r_asana_secret
-
-- name: Create asana-secret
-  command: "oc create secret generic asana-secret --from-literal=ASANA_PAT={{ asana_pat }} --from-literal=ASANA_WORKSPACE_GID={{ asana_workspace_gid }} --from-literal=ASANA_PROJECT_GID={{ asana_project_gid }} -n {{ demo_project }}"
-  when:
-   - r_asana_secret.resources | list | length == 0
-  ignore_errors: no
+  k8s:
+    state: present
+    resource_definition: "{{ lookup('template', 'secret_asana.yml.j2') }}"
 
 - name: Evaluate asana-adapter GitOps Application
   k8s:

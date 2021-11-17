@@ -6,8 +6,10 @@ Automation to deploy the Red Hat Integration Demo.
 
 - Camel K Operator
 - OpenShift Logging
+- OpenShift User Workload Monitoring
 - OpenShift Pipelines
 - OpenShift GitOps
+- 3scale
 
 
 == Install The Demo Using Ansible
@@ -42,3 +44,13 @@ docker_config:
 === Running the playbook
 
     ansible-playbook -e token= -e server=  --extra-vars @extra-vars.yml install-demo.yml
+
+== Additional configurations
+
+Once the demo is deployed you may add additional configurations that are not covered by the automation.
+
+=== ARGO CD Webhook
+
+Instead of waiting for a Sync every 3 minutes you can configure a webhook.
+
+https://argo-cd.readthedocs.io/en/stable/operator-manual/webhook/

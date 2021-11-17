@@ -4,11 +4,16 @@
     demo_delete: false
     demo_project: rhi-demo
     cicd_project: rhi-demo-cicd
+    threescale_project: rhi-demo-threescale
     registry_url: quay.io/gcamposo
     ingestor_git: https://gitlab.com/rhi-demo/salesforce-webhook-ingestor.git
     asana_adapter_git: https://gitlab.com/rhi-demo/asana-adapter.git
     insecure_skip_tls_verify: true
   tasks:
+
+    - name: Define domain
+      set_fact:
+        domain : "{{ server | regex_replace('https://api.') | regex_replace(':6443')   }}"
 
     - name: login as super user with token on OpenShift 4
       command: "oc login --token={{ token }}  --server={{ server }} --insecure-skip-tls-verify={{ insecure_skip_tls_verify }}"
@@ -46,3 +51,6 @@
 
     - name: Enable GitOps
       include_tasks: tasks/provision_gitops.yml
+
+    - name: Enable 3scale
+      include_tasks: tasks/provision_3scale.yml
