@@ -5,6 +5,8 @@
     demo_project: rhi-demo
     cicd_project: rhi-demo-cicd
     threescale_project: rhi-demo-threescale
+    threescale_account_user: rhidemouser
+    threescale_account_password: rhidemopassword
     registry_url: quay.io/gcamposo
     ingestor_git: https://gitlab.com/rhi-demo/salesforce-webhook-ingestor.git
     asana_adapter_git: https://gitlab.com/rhi-demo/asana-adapter.git
@@ -34,8 +36,6 @@
               openshift.io/description: ""
               openshift.io/display-name: "RHI Demo Project"
 
-    # - name: Provision Camel K Operator
-    #   include_tasks: tasks/provision_camelk.yml
 
     - name: Enable User Monitoring
       include_tasks: tasks/enable_user_project_monitoring.yml
@@ -54,3 +54,6 @@
 
     - name: Enable 3scale
       include_tasks: tasks/provision_3scale.yml
+
+    - name: Configure 3scale
+      include_tasks: tasks/configure_3scale.yml

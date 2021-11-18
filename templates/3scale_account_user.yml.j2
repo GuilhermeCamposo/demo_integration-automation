@@ -1,0 +1,13 @@
+kind: DeveloperUser
+apiVersion: capabilities.3scale.net/v1beta1
+metadata:
+  name: developeruser-admin-sample
+  namespace: '{{ threescale_project }}'
+spec:
+  developerAccountRef:
+    name: developeraccount-simple-sample
+  email: myusername2@example.com
+  passwordCredentialsRef:
+    name: rhi-demo-user
+  role: admin
+  username: '{{ threescale_account_user }}'
