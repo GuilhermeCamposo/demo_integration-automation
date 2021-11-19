@@ -1,7 +1,7 @@
 - name: Evaluate if Minio Stateful exists
   k8s:
     state: present
-    resource_definition: "{{ lookup('template', 'minio-stateful.yml.j2') }}"
+    resource_definition: "{{ lookup('template', 'minio_stateful.yml.j2') }}"
 
 - name: Waiting for Minio instance to be running
   k8s_info:

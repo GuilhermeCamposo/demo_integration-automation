@@ -1,4 +1,4 @@
-- name: Evaluate if 3scale-project namespace exists
+- name: Evaluate {{ threescale_project }} namespace 
   k8s:
     api_version: v1
     kind: Namespace

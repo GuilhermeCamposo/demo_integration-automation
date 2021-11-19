@@ -1,3 +1,8 @@
+# TODO replace this with a smatter way of checking
+- name: Wait for the 3scale APIs to be ready
+  pause:
+      minutes: 2
+
 - name: Evaluate backend exists
   k8s:
     state: present
@@ -37,12 +42,22 @@
 - name: Evaluate DeveloperAccount exists
   k8s:
     state: present
-    resource_definition: "{{ lookup('template', '3scale_org.yml.j2') }}"
+    resource_definition: "{{ lookup('template', '3scale_developer_account.yml.j2') }}"
 
-- name: Get DeveloperAccount
+- name: Evaluate DeveloperUser Secret exists
+  k8s:
+    state: present
+    resource_definition: "{{ lookup('template', '3scale_account_secret.yml.j2') }}"
+
+- name: Evaluate DeveloperUser exists
+  k8s:
+    state: present
+    resource_definition: "{{ lookup('template', '3scale_account_user.yml.j2') }}"
+
+- name: Get DeveloperAccount Org
   k8s_info:
     kind: DeveloperAccount
-    name:  developeraccount-simple-sample
+    name:  '{{ threescale_account_org }}'
     namespace: '{{ threescale_project }}'
     api_version: capabilities.3scale.net/v1beta1
   register: r_developer_account
@@ -51,16 +66,6 @@
     - r_developer_account.resources[0].status.accountID is defined
   retries: 10
   delay: 15
-
-- name: Evaluate Account Secret exists
-  k8s:
-    state: present
-    resource_definition: "{{ lookup('template', '3scale_account_secret.yml.j2') }}"
-
-- name: Evaluate DeveloperUser  exists
-  k8s:
-    state: present
-    resource_definition: "{{ lookup('template', '3scale_account_user.yml.j2') }}"
 
 - name: Get system-seed secret
   k8s_info:
@@ -96,7 +101,7 @@
 
 - name: Create Application
   uri:
-    url: https://3scale-admin.apps.{{ domain }}//admin/api/accounts/{{ r_developer_account.resources[0].status.accountID }}/applications.json
+    url: https://3scale-admin.apps.{{ domain }}/admin/api/accounts/{{ r_developer_account.resources[0].status.accountID }}/applications.json
     validate_certs: false
     method: POST
     body:
@@ -104,10 +109,18 @@
       plan_id: '{{ r_application_plan.json.application_plan.id }}'
       name: rhi-demo-app
       description: app for the demo
+      user_key: '1234567890'
     body_format: form-urlencoded
     status_code: 200,201,204
   register: r_application
 
-- name: debug result
-  debug:
-    msg: '{{ r_application }}'
+- name: Deploy to Staging
+  uri:
+    url: https://3scale-admin.apps.{{ domain }}/admin/api/services/3/proxy/deploy.json
+    validate_certs: false
+    method: POST
+    body:
+      access_token: '{{ threescale_token }}'
+    body_format: form-urlencoded
+    status_code: 200,201,204
+  register: r_application

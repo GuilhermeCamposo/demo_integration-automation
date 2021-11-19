@@ -6,11 +6,15 @@
     cicd_project: rhi-demo-cicd
     threescale_project: rhi-demo-threescale
     threescale_account_user: rhidemouser
+    threescale_account_org: rhi-demo-org
     threescale_account_password: rhidemopassword
     registry_url: quay.io/gcamposo
     ingestor_git: https://gitlab.com/rhi-demo/salesforce-webhook-ingestor.git
     asana_adapter_git: https://gitlab.com/rhi-demo/asana-adapter.git
     insecure_skip_tls_verify: true
+    enable_logging: false
+    enable_user_workload_monitoring: false
+    enable_pipelines: false
   tasks:
 
     - name: Define domain
@@ -39,21 +43,31 @@
 
     - name: Enable User Monitoring
       include_tasks: tasks/enable_user_project_monitoring.yml
+      when: enable_user_workload_monitoring
 
     - name: Enable Log Stack
       include_tasks: tasks/provision_log_stack.yml
+      when: enable_logging
 
     - name: Enable Pipelines
       include_tasks: tasks/provision_pipelines.yml
+      when: enable_pipelines
 
-    - name: Provision RHI Demo Pipelines
-      include_tasks: tasks/provision_demo_pipelines.yml
+    - name: Configure RHI Demo Pipelines
+      include_tasks: tasks/configure_pipelines.yml
+      when: enable_pipelines
 
     - name: Enable GitOps
       include_tasks: tasks/provision_gitops.yml
 
+    - name: Configure RHI Demo GitOps
+      include_tasks: tasks/configure_gitops.yml
+
     - name: Enable 3scale
       include_tasks: tasks/provision_3scale.yml
 
-    - name: Configure 3scale
+    - name: Configure RHI Demo 3scale
       include_tasks: tasks/configure_3scale.yml
+
+    # - name: Delete 3scale
+    #   include_tasks: tasks/delete_3scale.yml

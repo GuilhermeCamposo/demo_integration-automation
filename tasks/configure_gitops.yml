@@ -1,0 +1,37 @@
+- name: Evaluate GitOps Permissions
+  k8s:
+    state: present
+    api_version: rbac.authorization.k8s.io/v1
+    kind: RoleBinding
+    definition:
+      metadata:
+        name: edit-0
+        namespace: '{{ demo_project }}'
+      roleRef:
+        apiGroup: rbac.authorization.k8s.io
+        kind: ClusterRole
+        name: edit
+      subjects:
+      - kind: ServiceAccount
+        name: openshift-gitops-argocd-application-controller
+        namespace: openshift-gitops
+
+- name: Evaluate salesforce-secret exists
+  k8s:
+    state: present
+    resource_definition: "{{ lookup('template', 'secret_salesforce.yml.j2') }}"
+
+- name: Evaluate salesforce-webhook-ingestor GitOps Application
+  k8s:
+    state: present
+    resource_definition: "{{ lookup('template', 'argo_ingestor.yml.j2') }}"
+
+- name: Evaluate asana-secret exists
+  k8s:
+    state: present
+    resource_definition: "{{ lookup('template', 'secret_asana.yml.j2') }}"
+
+- name: Evaluate asana-adapter GitOps Application
+  k8s:
+    state: present
+    resource_definition: "{{ lookup('template', 'argo_asana_adapter.yml.j2') }}"
