@@ -14,7 +14,7 @@
     insecure_skip_tls_verify: true
     enable_logging: false
     enable_user_workload_monitoring: false
-    enable_pipelines: false
+    enable_pipelines: true
   tasks:
 
     - name: Define domain
@@ -49,6 +49,12 @@
       include_tasks: tasks/provision_log_stack.yml
       when: enable_logging
 
+    - name: Enable GitOps
+      include_tasks: tasks/provision_gitops.yml
+
+    - name: Configure RHI Demo GitOps
+      include_tasks: tasks/configure_gitops.yml
+
     - name: Enable Pipelines
       include_tasks: tasks/provision_pipelines.yml
       when: enable_pipelines
@@ -56,12 +62,6 @@
     - name: Configure RHI Demo Pipelines
       include_tasks: tasks/configure_pipelines.yml
       when: enable_pipelines
-
-    - name: Enable GitOps
-      include_tasks: tasks/provision_gitops.yml
-
-    - name: Configure RHI Demo GitOps
-      include_tasks: tasks/configure_gitops.yml
 
     - name: Enable 3scale
       include_tasks: tasks/provision_3scale.yml

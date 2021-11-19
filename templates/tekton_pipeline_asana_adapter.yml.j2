@@ -89,15 +89,16 @@ spec:
         - name: source
           workspace: shared-workspace
 
-    # - name: promote-prod
-    #   runAfter:
-    #     - build-push-image
-    #   taskRef:
-    #     kind: ClusterTask
-    #     name: openshift-client
-    #   params:
-    #     - name: SCRIPT
-    #       value: oc import-image asana-adapter:prod -n {{ demo_project }} --from=$(params.IMAGE_REGISTRY):$(tasks.maven-version.results.version) --confirm
+    - name: sync-application
+      taskRef:
+        name: argocd-sync-and-wait
+      runAfter:
+        - build-push-image
+      params:
+        - name: application-name
+          value: asana-adapter
+        - name: flags
+          value: --insecure
 
   workspaces:
     - name: shared-workspace

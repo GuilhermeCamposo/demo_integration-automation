@@ -1,7 +1,23 @@
+- name: Get openshift-gitops-cluster Secret
+  k8s_info:
+    kind: Secret
+    name:  openshift-gitops-cluster
+    namespace: openshift-gitops
+    api_version: v1
+  register: r_gitops_secret
+  until:
+    - r_gitops_secret.resources is defined
+  retries: 10
+  delay: 15
+
+- name: Set argo_password
+  set_fact:
+    argo_password: "{{ r_gitops_secret.resources[0].data['admin.password'] | b64decode }}"
+
 # TODO replace this with a smatter way of checking
 - name: Wait for the Operator APIs to be ready
   pause:
-      minutes: 2
+      minutes: 1
 
 - name: Evaluate '{{ cicd_project }}' project
   k8s:
@@ -38,6 +54,32 @@
     state: present
     resource_definition: "{{ lookup('template', 'secret_quay.yml.j2') }}"
 
+- name: Evaluate ArgoCD Secret
+  k8s:
+    state: present
+    kind: Secret
+    api_version: v1
+    definition:
+      metadata:
+        name: argocd-env-secret
+        namespace: '{{ cicd_project }}'
+      stringData:
+        ARGOCD_USERNAME: admin
+        ARGOCD_PASSWORD: '{{ argo_password }}'
+      type: Opaque
+
+- name: Evaluate ArgoCD ConfigMap
+  k8s:
+    state: present
+    kind: ConfigMap
+    api_version: v1
+    definition:
+      metadata:
+        name: argocd-env-configmap
+        namespace: '{{ cicd_project }}'
+      data:
+        ARGOCD_SERVER: openshift-gitops-server.openshift-gitops
+
 - name: Evaluate PVCs
   k8s:
     state: present
@@ -52,6 +94,11 @@
   k8s:
     state: present
     resource_definition: "{{ lookup('template', 'tekton_task_maven_version.yml.j2') }}"
+
+- name: Evaluate argo-sync Task
+  k8s:
+    state: present
+    resource_definition: "{{ lookup('template', 'tekton_task_argo.yml.j2') }}"
 
 - name: Evaluate salesforce-webhook-ingestor Pipeline
   k8s:
