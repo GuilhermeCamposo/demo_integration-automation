@@ -5,10 +5,27 @@
 
 - name: Delete Jaeger Subscription
   k8s:
-    state: present
+    state: absent
     api_version: operators.coreos.com/v1alpha1
     kind: Subscription
     definition:
       metadata:
         name: jaeger-product
         namespace: openshift-operators
+
+- name: Delete Kiali Subscription
+  k8s:
+    state: absent
+    api_version: operators.coreos.com/v1alpha1
+    kind: Subscription
+    definition:
+      metadata:
+        name: kiali-operator
+        namespace: openshift-operators
+
+- name: Delete istio-system Namespace
+  k8s:
+    api_version: v1
+    kind: Namespace
+    name: istio-system
+    state: absent

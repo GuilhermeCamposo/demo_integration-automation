@@ -73,8 +73,11 @@
 
     - name: Configure RHI Demo Pipelines
       include_tasks: tasks/configure_pipelines.yml
-      when: enable_pipelines      
+      when: enable_pipelines
 
 
     # - name: Delete 3scale
     #   include_tasks: tasks/delete_3scale.yml
+
+    # - name: Delete Service Mesh
+    #   include_tasks: tasks/delete_ossm.yml
