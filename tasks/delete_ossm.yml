@@ -1,0 +1,14 @@
+- name: Delete Istio Control Plane instance
+  k8s:
+    state: absent
+    src: templates/ossm_control_plane.yml.j2
+
+- name: Delete Jaeger Subscription
+  k8s:
+    state: present
+    api_version: operators.coreos.com/v1alpha1
+    kind: Subscription
+    definition:
+      metadata:
+        name: jaeger-product
+        namespace: openshift-operators

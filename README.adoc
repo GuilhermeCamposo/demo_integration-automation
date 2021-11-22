@@ -4,12 +4,12 @@ Automation to deploy the Red Hat Integration Demo.
 
 == Tools available
 
-- Camel K Operator
-- OpenShift Logging
-- OpenShift User Workload Monitoring
-- OpenShift Pipelines
-- OpenShift GitOps
-- 3scale
+* Camel K Operator
+* OpenShift Logging
+* OpenShift User Workload Monitoring
+* OpenShift Pipelines
+* OpenShift GitOps
+* 3scale
 
 
 == Install The Demo Using Ansible
@@ -40,17 +40,24 @@ sf_instance:
 docker_config:
 ----
 
+=== Extra-vars definitions
+
+* For information about Asana access properties look at https://gitlab.com/rhi-demo/asana-adapter/-/blob/main/README.adoc[asana-adapter's git repository].
+* For information about Salesforce access properties look at https://gitlab.com/rhi-demo/salesforce-webhook-ingestor/-/blob/main/README.adoc[salesforce-webhook-ingestor's git repository].
+
 
 === Running the playbook
 
-    ansible-playbook -e token= -e server=  --extra-vars @extra-vars.yml install-demo.yml
+    ansible-playbook -e token= -e server=  --extra-vars @extra-vars.yml install.yml
 
 == Additional configurations
 
 Once the demo is deployed you may add additional configurations that are not covered by the automation.
 
-=== ARGO CD Webhook
+=== ArgoCD first Sync
 
-Instead of waiting for a Sync every 3 minutes you can configure a webhook.
+In other to deploy the application, currently, you need to manually perform a sync. Log in the ArgoCD console and click Sync in both applications.
 
-https://argo-cd.readthedocs.io/en/stable/operator-manual/webhook/
+=== Kibana first search
+
+When opening Kibana for the fist time you need to map the correct index for the searches.

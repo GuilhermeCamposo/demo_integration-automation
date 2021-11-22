@@ -1,0 +1,127 @@
+- name: Evaluate MemberRoll
+  k8s:
+    state: present
+    api_version: maistra.io/v1
+    kind: ServiceMeshMemberRoll
+    definition:
+      metadata:
+        name: default
+        namespace: istio-system #control plane project
+      spec:
+        members:
+          # a list of projects joined into the service mesh
+          - '{{ demo_project }}'
+
+- name: Evaluate Gateway
+  k8s:
+    state: present
+    api_version: networking.istio.io/v1alpha3
+    kind: Gateway
+    definition:
+      metadata:
+        name: rhi-demo-gateway
+        namespace: '{{ demo_project }}'
+      spec:
+        selector:
+          istio: ingressgateway # use istio default controller
+        servers:
+        - port:
+            number: 80
+            name: http
+            protocol: HTTP
+          hosts:
+          - "*"
+
+- name: Evaluate VirtualService
+  k8s:
+    state: present
+    api_version: networking.istio.io/v1alpha3
+    kind: VirtualService
+    definition:
+      metadata:
+        name: salesforce-webhook-ingestor
+        namespace: '{{ demo_project }}'
+      spec:
+        hosts:
+        - "*"
+        gateways:
+        - rhi-demo-gateway
+        http:
+        - match:
+          - uri:
+              exact: /opportunities
+          route:
+          - destination:
+              host: salesforce-webhook-ingestor
+              port:
+                number: 8080
+
+- name: Evaluate salesforce-webhook-ingestor DestinationRule
+  k8s:
+    state: present
+    api_version: networking.istio.io/v1alpha3
+    kind: DestinationRule
+    definition:
+      metadata:
+        name: salesforce-webhook-ingestor
+        namespace: '{{ demo_project }}'
+      spec:
+        host: salesforce-webhook-ingestor
+        subsets:
+        - name: v1
+          labels:
+            version: v1
+
+- name: Evaluate asana-adapter DestinationRule
+  k8s:
+    state: present
+    api_version: networking.istio.io/v1alpha3
+    kind: DestinationRule
+    definition:
+      metadata:
+        name: asana-adapter
+        namespace: '{{ demo_project }}'
+      spec:
+        host: asana-adapter
+        subsets:
+        - name: v1
+          labels:
+            version: v1
+
+- name: Evaluate salesforce ServiceEntry
+  k8s:
+    state: present
+    api_version: networking.istio.io/v1alpha3
+    kind: ServiceEntry
+    definition:
+      metadata:
+        name: salesforce
+        namespace: '{{ demo_project }}'
+      spec:
+        hosts:
+        - '{{ sf_instance }}'
+        ports:
+        - number: 443
+          name: https
+          protocol: HTTPS
+        location: MESH_EXTERNAL
+        resolution: DNS
+
+- name: Evaluate salesforce ServiceEntry
+  k8s:
+    state: present
+    api_version: networking.istio.io/v1alpha3
+    kind: ServiceEntry
+    definition:
+      metadata:
+        name: asana
+        namespace: '{{ demo_project }}'
+      spec:
+        hosts:
+        - app.asana.com
+        ports:
+        - number: 443
+          name: https
+          protocol: HTTPS
+        location: MESH_EXTERNAL
+        resolution: DNS

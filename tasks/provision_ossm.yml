@@ -1,0 +1,102 @@
+- name: Evaluate openshift-operators Namespace
+  k8s:
+    api_version: v1
+    kind: Namespace
+    name: openshift-operators
+    state: present
+
+- name: Evaluate Jaeger Subscription
+  k8s:
+    state: present
+    api_version: operators.coreos.com/v1alpha1
+    kind: Subscription
+    definition:
+      metadata:
+        name: jaeger-product
+        namespace: openshift-operators
+      spec:
+        channel: stable
+        installPlanApproval: Automatic
+        name: jaeger-product
+        source: redhat-operators
+        sourceNamespace: openshift-marketplace
+
+- name: Waiting for Jaeger subscription to complete
+  shell: set -o pipefail && oc get csv | grep jaeger-operator
+  register: install_status
+  until: "'Succeeded' in install_status.stdout"
+  retries: 20
+  delay: 15
+  args:
+    executable: /bin/bash
+
+- name: Evaluate Kiali Subscription
+  k8s:
+    state: present
+    api_version: operators.coreos.com/v1alpha1
+    kind: Subscription
+    definition:
+      metadata:
+        name: kiali-operator
+        namespace: openshift-operators
+      spec:
+        channel: stable
+        installPlanApproval: Automatic
+        name: kiali-ossm
+        source: redhat-operators
+        sourceNamespace: openshift-marketplace
+
+- name: Waiting for Kiali subscription to complete
+  shell: set -o pipefail && oc get csv | grep kiali-operator
+  register: install_status
+  until: "'Succeeded' in install_status.stdout"
+  retries: 20
+  delay: 15
+  args:
+    executable: /bin/bash
+
+- name: Evaluate Service Mesh Subscription
+  k8s:
+    state: present
+    api_version: operators.coreos.com/v1alpha1
+    kind: Subscription
+    definition:
+      metadata:
+        name: redhat-service-mesh-operator
+        namespace: openshift-operators
+      spec:
+        channel: stable
+        installPlanApproval: Automatic
+        name: servicemeshoperator
+        source: redhat-operators
+        sourceNamespace: openshift-marketplace
+
+- name: Waiting for Service Mesh Subscription to Complete
+  shell:  set -o pipefail && oc get csv | grep servicemeshoperator
+  register: install_status
+  until: "'Succeeded' in install_status.stdout"
+  retries: 20
+  delay: 15
+  args:
+    executable: /bin/bash
+
+- name: Evaluate istio-system Namespace
+  k8s:
+    api_version: v1
+    kind: Namespace
+    name: istio-system
+    state: present
+
+- name: Evaluate  IstioControlPlane instance 
+  k8s:
+    state: present
+    src: templates/ossm_control_plane.yml.j2
+
+- name: Waiting for Service Mesh instance to be ready
+  shell: set -o pipefail && oc get servicemeshcontrolplane full-install -n istio-system | grep full-install
+  register: install_status
+  until: "'ComponentsReady' in install_status.stdout"
+  retries: 30
+  delay: 30
+  args:
+    executable: /bin/bash
