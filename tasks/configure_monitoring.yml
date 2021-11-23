@@ -1,0 +1,61 @@
+- name: Evaluate Service Monitor
+  k8s:
+    state: present
+    resource_definition: "{{ lookup('template', 'prometheus_service_monitor.yml.j2') }}"
+
+- name: Get Grafana ServiceAccount
+  k8s_info:
+    kind: ServiceAccount
+    name:  grafana-serviceaccount
+    namespace: '{{ demo_project }}'
+    api_version: v1
+  register: r_grafana_sa
+  until:
+    - r_grafana_sa.resources is defined
+    - r_grafana_sa.resources[0].secrets[0] is defined
+  retries: 10
+  delay: 15
+
+- name: Get Grafana ServiceAccount Token
+  k8s_info:
+    kind: Secret
+    name:  '{{ r_grafana_sa.resources[0].secrets[0].name }}'
+    namespace: '{{ demo_project }}'
+    api_version: v1
+  register: r_grafana_token
+  until:
+    - r_grafana_token.resources is defined
+  retries: 10
+  delay: 15
+
+- name: Set grafana_token
+  set_fact:
+    grafana_token: '{{ r_grafana_token.resources[0].data.token | b64decode }}'
+
+- name: Evaluate Grafana ServiceAccount permissons
+  k8s:
+    state: present
+    api_version: rbac.authorization.k8s.io/v1
+    kind: RoleBinding
+    definition:
+      metadata:
+        name: metric-viewer
+        namespace: '{{ demo_project }}'
+      roleRef:
+        apiGroup: rbac.authorization.k8s.io
+        kind: ClusterRole
+        name: cluster-monitoring-view
+      subjects:
+      - kind: ServiceAccount
+        name: grafana-serviceaccount
+        namespace: '{{ demo_project }}'
+
+- name: Evaluate Grafana Datasource
+  k8s:
+    state: present
+    resource_definition: "{{ lookup('template', 'grafana_datasource.yml.j2') }}"
+
+- name: Evaluate Grafana Dashboard
+  k8s:
+    state: present
+    resource_definition: "{{ lookup('template', 'grafana_dashboard.yml.j2') }}"

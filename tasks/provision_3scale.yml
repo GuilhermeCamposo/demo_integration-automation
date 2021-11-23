@@ -1,4 +1,4 @@
-- name: Evaluate {{ threescale_project }} namespace 
+- name: Evaluate {{ threescale_project }} namespace
   k8s:
     api_version: v1
     kind: Namespace
@@ -11,8 +11,7 @@
     resource_definition: "{{ lookup('template', '3scale_operator.yml.j2') }}"
 
 - name: Waiting for 3scale Subscription to complete
-  shell: |
-    set -o pipefail && oc get csv -n {{ threescale_project }} | grep 3scale-operator
+  shell: set -o pipefail && oc get csv -n {{ threescale_project }} | grep 3scale-operator
   register: install_status
   until: "'Succeeded' in install_status.stdout"
   retries: 20
