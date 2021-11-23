@@ -107,7 +107,7 @@
         location: MESH_EXTERNAL
         resolution: DNS
 
-- name: Evaluate salesforce ServiceEntry
+- name: Evaluate asana ServiceEntry
   k8s:
     state: present
     api_version: networking.istio.io/v1alpha3
@@ -125,3 +125,65 @@
           protocol: HTTPS
         location: MESH_EXTERNAL
         resolution: DNS
+
+- name: Get 3scale Service
+  uri:
+    url: https://3scale-admin.apps.{{ domain }}/admin/api/services/3/proxy/configs/staging/latest.json
+    validate_certs: false
+    method: GET
+    body:
+      access_token: '{{ threescale_token }}'
+    body_format: form-urlencoded
+    status_code: 200
+  register: r_3scale_service
+
+- name: Set service token
+  set_fact:
+    service_token: '{{ r_3scale_service.json.proxy_config.content.backend_authentication_value }}'
+
+- name: Evaluate ingestor-3scale ServiceMeshExtension
+  k8s:
+    state: present
+    api_version: maistra.io/v1
+    kind: ServiceMeshExtension
+    definition:
+      metadata:
+        name: ingestor-3scale
+        namespace: '{{ demo_project }}'
+      spec:
+        image: quay.io/3scale/threescale-wasm-auth:qe
+        phase: PostAuthZ
+        priority: 100
+        workloadSelector:
+          labels:
+            app: salesforce-webhook-ingestor
+        config:
+          api: v1
+          system:
+            name: system-name
+            upstream:
+              name: system
+              url: 'https://3scale-admin.apps.{{ domain }}'
+              timeout: 5000
+            token: atoken
+          backend:
+            name: backend-name
+            upstream:
+              name: backend
+              url: 'https://3scale-admin.apps.{{ domain }}'
+              timeout: 5000
+            extensions:
+            - no_body
+          services:
+          - id: '3'
+            token: '{{ service_token }}'
+            authorities:
+            - '*'
+            credentials:
+              user_key:
+                - query_string:
+                    keys:
+                      - user_key
+                - header:
+                    keys:
+                      - user_key

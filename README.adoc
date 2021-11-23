@@ -54,10 +54,6 @@ docker_config:
 
 Once the demo is deployed you may add additional configurations that are not covered by the automation.
 
-=== ArgoCD first Sync
-
-In other to deploy the application, currently, you need to manually perform a sync. Log in the ArgoCD console and click Sync in both applications.
-
 === Kibana first search
 
 When opening Kibana for the fist time you need to map the correct index for the searches.

@@ -80,6 +80,11 @@
   args:
     executable: /bin/bash
 
+# TODO replace this with a smatter way of checking
+- name: Wait for the Service Mesh APIs to be ready
+  pause:
+      minutes: 2
+
 - name: Evaluate istio-system Namespace
   k8s:
     api_version: v1
@@ -87,7 +92,7 @@
     name: istio-system
     state: present
 
-- name: Evaluate  IstioControlPlane instance 
+- name: Evaluate  IstioControlPlane instance
   k8s:
     state: present
     src: templates/ossm_control_plane.yml.j2
