@@ -1,5 +1,5 @@
 - name: Delete 3scale
   include_tasks: tasks/delete_3scale.yml
 
-# - name: Delete Service Mesh
-#   include_tasks: tasks/delete_ossm.yml
+- name: Delete Service Mesh
+  include_tasks: tasks/delete_ossm.yml

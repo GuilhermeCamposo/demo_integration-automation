@@ -7,40 +7,26 @@
   k8s_info:
     kind: ServiceAccount
     name:  grafana-serviceaccount
-    namespace: '{{ demo_project }}'
+    namespace: '{{ grafana_project }}'
     api_version: v1
   register: r_grafana_sa
   until:
     - r_grafana_sa.resources is defined
-    - r_grafana_sa.resources[0].secrets[0] is defined
   retries: 10
   delay: 15
 
-- name: Get Grafana ServiceAccount Token
-  k8s_info:
-    kind: Secret
-    name:  '{{ r_grafana_sa.resources[0].secrets[0].name }}'
-    namespace: '{{ demo_project }}'
-    api_version: v1
-  register: r_grafana_token
-  until:
-    - r_grafana_token.resources is defined
-  retries: 10
-  delay: 15
-
-- name: Set grafana_token
-  set_fact:
-    grafana_token: '{{ r_grafana_token.resources[0].data.token | b64decode }}'
+- name: Loop Secrets
+  include_tasks: tasks/loop_secrets.yml
+  with_items: '{{ r_grafana_sa.resources[0].secrets  }}'
 
 - name: Evaluate Grafana ServiceAccount permissons
   k8s:
     state: present
     api_version: rbac.authorization.k8s.io/v1
-    kind: RoleBinding
+    kind: ClusterRoleBinding
     definition:
       metadata:
-        name: metric-viewer
-        namespace: '{{ demo_project }}'
+        name: thanos-metric-viewer
       roleRef:
         apiGroup: rbac.authorization.k8s.io
         kind: ClusterRole
@@ -48,7 +34,7 @@
       subjects:
       - kind: ServiceAccount
         name: grafana-serviceaccount
-        namespace: '{{ demo_project }}'
+        namespace: '{{ grafana_project }}'
 
 - name: Evaluate Grafana Datasource
   k8s:

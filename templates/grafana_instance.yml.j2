@@ -2,7 +2,7 @@ apiVersion: integreatly.org/v1alpha1
 kind: Grafana
 metadata:
   name: integration-grafana
-  namespace: '{{ demo_project }}'
+  namespace: '{{ grafana_project }}'
 spec:
   config:
     auth:
@@ -22,4 +22,4 @@ spec:
           values:
             - grafana
   ingress:
-    enabled: false
+    enabled: true

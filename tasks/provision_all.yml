@@ -53,10 +53,10 @@
   include_tasks: tasks/configure_pipelines.yml
   when: enable_pipelines
 
-# - name: Provision User Monitoring
-#   include_tasks: tasks/provision_monitoring.yml
-#   when: enable_user_workload_monitoring
-#
-# - name: Configure User Monitoring
-#   include_tasks: tasks/configure_monitoring.yml
-#   when: enable_user_workload_monitoring
+- name: Provision User Monitoring
+  include_tasks: tasks/provision_monitoring.yml
+  when: enable_user_workload_monitoring
+
+- name: Configure User Monitoring
+  include_tasks: tasks/configure_monitoring.yml
+  when: enable_user_workload_monitoring

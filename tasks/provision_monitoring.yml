@@ -11,6 +11,31 @@
         config.yaml: |
           enableUserWorkload: true
 
+- name: Evaluate demo_project Namespace
+  k8s:
+    state: present
+    kind: Project
+    api_version: project.openshift.io/v1
+    definition:
+      metadata:
+        name: "{{ grafana_project }}"
+        annotations:
+          openshift.io/description: "Project for monitoring dashboard"
+          openshift.io/display-name: "RHI Demo Grafana"
+
+- name: Evaluate Operator Group
+  k8s:
+    state: present
+    api_version: operators.coreos.com/v1
+    kind: OperatorGroup
+    definition:
+      metadata:
+        name: '{{ grafana_project }}-operatorgroup'
+        namespace: '{{ grafana_project}}'
+      spec:
+        targetNamespaces:
+        - '{{ grafana_project }}'
+
 - name: Evaluate Grafana Operator
   k8s:
     state: present
@@ -19,17 +44,17 @@
     definition:
       metadata:
         name: grafana-operator
-        namespace: '{{ demo_project }}'
+        namespace: '{{ grafana_project }}'
       spec:
         channel: v4
         installPlanApproval: Automatic
         name: grafana-operator
         source: community-operators
         sourceNamespace: openshift-marketplace
-        startingCSV: grafana-operator.v4.0.2
+        startingCSV: grafana-operator.v4.0.1
 
 - name: Waiting for Grafana Subscription to complete
-  shell: set -o pipefail && oc get csv -n {{ demo_project }} | grep grafana-operator
+  shell: set -o pipefail && oc get csv -n {{ grafana_project }} | grep grafana-operator
   register: install_status
   until: "'Succeeded' in install_status.stdout"
   retries: 20

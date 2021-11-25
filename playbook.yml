@@ -4,6 +4,7 @@
     demo_delete: false
     demo_project: rhi-demo
     cicd_project: rhi-demo-cicd
+    grafana_project: rhi-demo-grafana
     threescale_project: rhi-demo-threescale
     threescale_account_user: rhidemouser
     threescale_account_org: rhi-demo-org
