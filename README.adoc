@@ -46,9 +46,13 @@ docker_config:
 * For information about Salesforce access properties look at https://gitlab.com/rhi-demo/salesforce-webhook-ingestor/-/blob/main/README.adoc[salesforce-webhook-ingestor's git repository].
 
 
-=== Running the playbook
+=== Deploying the demo
 
-    ansible-playbook -e token= -e server=  --extra-vars @extra-vars.yml install.yml
+    ansible-playbook -e token= -e server=  --extra-vars @extra-vars.yml playbook.yml
+
+=== Deleting the demo
+
+    ansible-playbook -e token= -e server=  -e delete_demo=true -e provision_demo=false playbook.yml
 
 == Additional configurations
 

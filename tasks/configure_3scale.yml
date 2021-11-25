@@ -1,9 +1,9 @@
 # TODO replace this with a smatter way of checking
 - name: Wait for the 3scale APIs to be ready
   pause:
-      minutes: 2
+      minutes: 1
 
-- name: Evaluate backend exists
+- name: Evaluate backend
   k8s:
     state: present
     resource_definition: "{{ lookup('template', '3scale_backend_salesforce.yml.j2') }}"
@@ -21,7 +21,7 @@
   retries: 10
   delay: 15
 
-- name: Evaluate Product exists
+- name: Evaluate Product
   k8s:
     state: present
     resource_definition: "{{ lookup('template', '3scale_product_salesforce.yml.j2') }}"
@@ -36,34 +36,6 @@
   until:
     - r_product.resources is defined
     - r_product.resources[0].status.productId is defined
-  retries: 10
-  delay: 15
-
-- name: Evaluate DeveloperAccount exists
-  k8s:
-    state: present
-    resource_definition: "{{ lookup('template', '3scale_developer_account.yml.j2') }}"
-
-- name: Evaluate DeveloperUser Secret exists
-  k8s:
-    state: present
-    resource_definition: "{{ lookup('template', '3scale_account_secret.yml.j2') }}"
-
-- name: Evaluate DeveloperUser exists
-  k8s:
-    state: present
-    resource_definition: "{{ lookup('template', '3scale_account_user.yml.j2') }}"
-
-- name: Get DeveloperAccount Org
-  k8s_info:
-    kind: DeveloperAccount
-    name:  '{{ threescale_account_org }}'
-    namespace: '{{ threescale_project }}'
-    api_version: capabilities.3scale.net/v1beta1
-  register: r_developer_account
-  until:
-    - r_developer_account.resources is defined
-    - r_developer_account.resources[0].status.accountID is defined
   retries: 10
   delay: 15
 
@@ -99,9 +71,10 @@
     status_code: 200,201,204
   register: r_application_plan
 
+# Using the default account
 - name: Create Application
   uri:
-    url: https://3scale-admin.apps.{{ domain }}/admin/api/accounts/{{ r_developer_account.resources[0].status.accountID }}/applications.json
+    url: https://3scale-admin.apps.{{ domain }}/admin/api/accounts/3/applications.json
     validate_certs: false
     method: POST
     body:

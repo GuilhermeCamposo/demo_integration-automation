@@ -1,0 +1,62 @@
+- name: Evaluate demo_project Namespace
+  k8s:
+    state: present
+    kind: Project
+    api_version: project.openshift.io/v1
+    definition:
+      metadata:
+        name: "{{ demo_project }}"
+        annotations:
+          openshift.io/description: "Namespace used to deploy RHI Demo applications"
+          openshift.io/display-name: "RHI Demo Project"
+
+- name: Evaluate Operator Group
+  k8s:
+    state: present
+    api_version: operators.coreos.com/v1
+    kind: OperatorGroup
+    definition:
+      metadata:
+        name: '{{ demo_project }}-operatorgroup'
+        namespace: '{{ demo_project}}'
+      spec:
+        targetNamespaces:
+        - '{{ demo_project }}'
+
+- name: Provision Log Stack
+  include_tasks: tasks/provision_logging.yml
+  when: enable_logging
+
+- name: Provision 3scale
+  include_tasks: tasks/provision_3scale.yml
+
+- name: Configure RHI Demo 3scale
+  include_tasks: tasks/configure_3scale.yml
+
+- name: Provision Service Mesh
+  include_tasks: tasks/provision_ossm.yml
+
+- name: Configure Service Mesh
+  include_tasks: tasks/configure_ossm.yml
+
+- name: Provision GitOps
+  include_tasks: tasks/provision_gitops.yml
+
+- name: Configure RHI Demo GitOps
+  include_tasks: tasks/configure_gitops.yml
+
+- name: Provision Pipelines
+  include_tasks: tasks/provision_pipelines.yml
+  when: enable_pipelines
+
+- name: Configure RHI Demo Pipelines
+  include_tasks: tasks/configure_pipelines.yml
+  when: enable_pipelines
+
+# - name: Provision User Monitoring
+#   include_tasks: tasks/provision_monitoring.yml
+#   when: enable_user_workload_monitoring
+#
+# - name: Configure User Monitoring
+#   include_tasks: tasks/configure_monitoring.yml
+#   when: enable_user_workload_monitoring

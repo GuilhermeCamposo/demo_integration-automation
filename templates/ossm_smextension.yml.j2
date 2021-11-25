@@ -1,0 +1,45 @@
+apiVersion: maistra.io/v1
+kind: ServiceMeshExtension
+metadata:
+  name: ingestor-3scale
+  namespace: '{{ demo_project }}'
+spec:
+  config:
+    api: v1
+    backend:
+      extensions:
+        - no_body
+      name: backend-name
+      upstream:
+        name: outbound|80||backend-3scale.apps.{{ domain }}
+        timeout: 5000
+        url: 'http://backend-3scale.apps.{{ domain }}'
+    services:
+      - authorities:
+          - '*'
+        credentials:
+          user_key:
+            - query_string:
+                keys:
+                  - user_key
+        id: '3'
+        token: '{{ service_token }}'
+        mapping_rules:
+          - method: POST
+            pattern: "/"
+            usages:
+              - delta: 1
+                name: hits
+    system:
+      name: system-name
+      token: '{{ threescale_token }}'
+      upstream:
+        name: outbound|80||3scale-admin.apps.{{ domain }}
+        timeout: 5000
+        url: 'http://3scale-admin.apps.{{ domain }}'
+  image: 'registry.redhat.io/openshift-service-mesh/3scale-auth-wasm-rhel8:0.0.1'
+  phase: PostAuthZ
+  priority: 100
+  workloadSelector:
+    labels:
+      app: salesforce-webhook-ingestor
