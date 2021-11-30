@@ -1,6 +1,6 @@
 - name: Check Pipelines Subscription
   k8s:
-    state: present
+    state: absent
     kind: Subscription
     api_version: operators.coreos.com/v1alpha1
     definition:
@@ -14,11 +14,14 @@
         source: redhat-operators
         sourceNamespace: openshift-marketplace
 
-- name: Wait for Pipeline Subscription to complete
-  shell: set -o pipefail && oc get csv -n openshift-operators | grep redhat-openshift-pipelines
-  register: install_status
-  until: "'Succeeded' in install_status.stdout"
-  retries: 20
-  delay: 15
-  args:
-    executable: /bin/bash
+- name: Delete {{ cicd_project }} project
+  k8s:
+    state: present
+    kind: Project
+    api_version: project.openshift.io/v1
+    definition:
+      metadata:
+        name: "{{ cicd_project }}"
+        annotations:
+          openshift.io/description: ""
+          openshift.io/display-name: "RHI Demo CICD Project"

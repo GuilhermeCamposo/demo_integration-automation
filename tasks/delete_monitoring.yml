@@ -1,0 +1,21 @@
+- name: Evaluate User Workload Monitoring
+  k8s:
+    state: absent
+    kind: ConfigMap
+    api_version: v1
+    definition:
+      metadata:
+        name: cluster-monitoring-config
+        namespace: openshift-monitoring
+
+- name: Delete {{ grafana_project }} Namespace
+  k8s:
+    state: absent
+    kind: Project
+    api_version: project.openshift.io/v1
+    definition:
+      metadata:
+        name: "{{ grafana_project }}"
+        annotations:
+          openshift.io/description: "Project for monitoring dashboard"
+          openshift.io/display-name: "RHI Demo Grafana"

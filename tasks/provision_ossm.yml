@@ -21,7 +21,7 @@
         source: redhat-operators
         sourceNamespace: openshift-marketplace
 
-- name: Waiting for Jaeger subscription to complete
+- name: Wait for Jaeger subscription to complete
   shell: set -o pipefail && oc get csv | grep jaeger-operator
   register: install_status
   until: "'Succeeded' in install_status.stdout"
@@ -46,7 +46,7 @@
         source: redhat-operators
         sourceNamespace: openshift-marketplace
 
-- name: Waiting for Kiali subscription to complete
+- name: Wait for Kiali subscription to complete
   shell: set -o pipefail && oc get csv | grep kiali-operator
   register: install_status
   until: "'Succeeded' in install_status.stdout"
@@ -71,7 +71,7 @@
         source: redhat-operators
         sourceNamespace: openshift-marketplace
 
-- name: Waiting for Service Mesh Subscription to Complete
+- name: Wait for Service Mesh Subscription to Complete
   shell:  set -o pipefail && oc get csv | grep servicemeshoperator
   register: install_status
   until: "'Succeeded' in install_status.stdout"
@@ -97,7 +97,7 @@
     state: present
     src: templates/ossm_control_plane.yml.j2
 
-- name: Waiting for Service Mesh instance to be ready
+- name: Wait for Service Mesh instance to be ready
   shell: set -o pipefail && oc get servicemeshcontrolplane full-install -n istio-system | grep full-install
   register: install_status
   until: "'ComponentsReady' in install_status.stdout"

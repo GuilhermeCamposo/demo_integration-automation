@@ -11,6 +11,7 @@
         members:
           # a list of projects joined into the service mesh
           - '{{ demo_project }}'
+          - openshift-user-workload-monitoring
 
 - name: Evaluate Gateway
   k8s:
@@ -126,60 +127,60 @@
         location: MESH_EXTERNAL
         resolution: DNS
 
-- name: Evaluate 3scale ServiceEntry
-  k8s:
-    state: present
-    api_version: networking.istio.io/v1alpha3
-    kind: ServiceEntry
-    definition:
-      metadata:
-        name: 3scale
-        namespace: '{{ demo_project }}'
-      spec:
-        hosts:
-        - 3scale-admin.apps.{{ domain }}
-        ports:
-        - number: 80
-          name: http
-          protocol: HTTP
-        location: MESH_EXTERNAL
-        resolution: DNS
-
-- name: Evaluate 3scale-backend ServiceEntry
-  k8s:
-    state: present
-    api_version: networking.istio.io/v1alpha3
-    kind: ServiceEntry
-    definition:
-      metadata:
-        name: 3scale-backend
-        namespace: '{{ demo_project }}'
-      spec:
-        hosts:
-        - backend-3scale.apps.{{ domain }}
-        ports:
-        - number: 80
-          name: http
-          protocol: HTTP
-        location: MESH_EXTERNAL
-        resolution: DNS
-
-- name: Get 3scale Service
-  uri:
-    url: https://3scale-admin.apps.{{ domain }}/admin/api/services/3/proxy/configs/staging/latest.json
-    validate_certs: false
-    method: GET
-    body:
-      access_token: '{{ threescale_token }}'
-    body_format: form-urlencoded
-    status_code: 200
-  register: r_3scale_service
-
-- name: Set service token
-  set_fact:
-    service_token: '{{ r_3scale_service.json.proxy_config.content.backend_authentication_value }}'
-
-- name: Evaluate ingestor-3scale ServiceMeshExtension
-  k8s:
-    state: present
-    resource_definition: "{{ lookup('template', 'ossm_smextension.yml.j2') }}"
+# - name: Evaluate 3scale ServiceEntry
+#   k8s:
+#     state: present
+#     api_version: networking.istio.io/v1alpha3
+#     kind: ServiceEntry
+#     definition:
+#       metadata:
+#         name: 3scale
+#         namespace: '{{ demo_project }}'
+#       spec:
+#         hosts:
+#         - 3scale-admin.apps.{{ domain }}
+#         ports:
+#         - number: 80
+#           name: http
+#           protocol: HTTP
+#         location: MESH_EXTERNAL
+#         resolution: DNS
+#
+# - name: Evaluate 3scale-backend ServiceEntry
+#   k8s:
+#     state: present
+#     api_version: networking.istio.io/v1alpha3
+#     kind: ServiceEntry
+#     definition:
+#       metadata:
+#         name: 3scale-backend
+#         namespace: '{{ demo_project }}'
+#       spec:
+#         hosts:
+#         - backend-3scale.apps.{{ domain }}
+#         ports:
+#         - number: 80
+#           name: http
+#           protocol: HTTP
+#         location: MESH_EXTERNAL
+#         resolution: DNS
+#
+# - name: Get 3scale Service
+#   uri:
+#     url: https://3scale-admin.apps.{{ domain }}/admin/api/services/3/proxy/configs/staging/latest.json
+#     validate_certs: false
+#     method: GET
+#     body:
+#       access_token: '{{ threescale_token }}'
+#     body_format: form-urlencoded
+#     status_code: 200
+#   register: r_3scale_service
+#
+# - name: Set service token
+#   set_fact:
+#     service_token: '{{ r_3scale_service.json.proxy_config.content.backend_authentication_value }}'
+#
+# - name: Evaluate ingestor-3scale ServiceMeshExtension
+#   k8s:
+#     state: present
+#     resource_definition: "{{ lookup('template', 'ossm_smextension.yml.j2') }}"

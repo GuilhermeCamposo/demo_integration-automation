@@ -11,7 +11,7 @@
         config.yaml: |
           enableUserWorkload: true
 
-- name: Evaluate demo_project Namespace
+- name: Evaluate {{ grafana_project }} Namespace
   k8s:
     state: present
     kind: Project
@@ -52,7 +52,7 @@
         source: community-operators
         sourceNamespace: openshift-marketplace
 
-- name: Waiting for Grafana Subscription to complete
+- name: Wait for Grafana Subscription to complete
   shell: set -o pipefail && oc get csv -n {{ grafana_project }} | grep grafana-operator
   register: install_status
   until: "'Succeeded' in install_status.stdout"

@@ -16,7 +16,8 @@ spec:
         url: 'http://backend-3scale.apps.{{ domain }}'
     services:
       - authorities:
-          - '*'
+          - '*.apps.{{ domain }}'
+          - istio-ingressgateway
         credentials:
           user_key:
             - query_string:

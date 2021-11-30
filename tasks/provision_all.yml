@@ -1,4 +1,4 @@
-- name: Evaluate demo_project Namespace
+- name: Evaluate {{ demo_project }} Namespace
   k8s:
     state: present
     kind: Project
@@ -27,6 +27,14 @@
   include_tasks: tasks/provision_logging.yml
   when: enable_logging
 
+- name: Provision User Monitoring
+  include_tasks: tasks/provision_monitoring.yml
+  when: enable_user_workload_monitoring
+
+- name: Configure User Monitoring
+  include_tasks: tasks/configure_monitoring.yml
+  when: enable_user_workload_monitoring
+
 - name: Provision 3scale
   include_tasks: tasks/provision_3scale.yml
 
@@ -52,11 +60,3 @@
 - name: Configure RHI Demo Pipelines
   include_tasks: tasks/configure_pipelines.yml
   when: enable_pipelines
-
-- name: Provision User Monitoring
-  include_tasks: tasks/provision_monitoring.yml
-  when: enable_user_workload_monitoring
-
-- name: Configure User Monitoring
-  include_tasks: tasks/configure_monitoring.yml
-  when: enable_user_workload_monitoring

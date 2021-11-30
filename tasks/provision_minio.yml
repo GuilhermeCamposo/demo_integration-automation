@@ -3,7 +3,7 @@
     state: present
     resource_definition: "{{ lookup('template', 'minio_stateful.yml.j2') }}"
 
-- name: Waiting for Minio instance to be running
+- name: Wait for Minio instance to be running
   k8s_info:
     api_version: v1
     kind: Pod

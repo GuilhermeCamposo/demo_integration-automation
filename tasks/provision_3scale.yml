@@ -10,7 +10,7 @@
     state: present
     resource_definition: "{{ lookup('template', '3scale_operator.yml.j2') }}"
 
-- name: Waiting for 3scale Subscription to complete
+- name: Wait for 3scale Subscription to complete
   shell: set -o pipefail && oc get csv -n {{ threescale_project }} | grep 3scale-operator
   register: install_status
   until: "'Succeeded' in install_status.stdout"

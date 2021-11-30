@@ -1,6 +1,4 @@
----
-
-- name: Check ElasticSearch Namespace
+- name: Evaluate ElasticSearch Namespace
   k8s:
     state: present
     kind: Namespace
@@ -13,7 +11,7 @@
         labels:
           openshift.io/cluster-monitoring: "true"
 
-- name: Check openshift-operators-redhat OperatorGroup
+- name: Evaluate openshift-operators-redhat OperatorGroup
   k8s:
     state: present
     kind: OperatorGroup
@@ -24,7 +22,7 @@
         namespace: openshift-operators-redhat
       spec: {}
 
-- name: Check ElasticSearch Subscription
+- name: Evaluate ElasticSearch Subscription
   k8s:
     state: present
     kind: Subscription
@@ -40,7 +38,7 @@
         source: redhat-operators
         sourceNamespace: openshift-marketplace
 
-- name: Check Logging Operator Namespace
+- name: Evaluate Logging Operator Namespace
   k8s:
     state: present
     kind: Namespace
@@ -53,7 +51,7 @@
         labels:
           openshift.io/cluster-monitoring: "true"
 
-- name: Check openshift-logging OperatorGroup
+- name: Evaluate openshift-logging OperatorGroup
   k8s:
     state: present
     kind: OperatorGroup
@@ -66,7 +64,7 @@
         targetNamespaces:
         - openshift-logging
 
-- name: Check logging Subscription
+- name: Evaluate logging Subscription
   k8s:
     state: present
     kind: Subscription
@@ -80,12 +78,13 @@
           name: cluster-logging
           source: redhat-operators
           sourceNamespace: openshift-marketplace
+
 # TODO replace this with a smatter way of checking
-- name: Wait for the deployments to be created
+- name: Wait for the Logging Operator deployments to be created
   pause:
       minutes: 2
 
-- name: Check if Logging Operator is ready
+- name: Evaluate Logging Operator is ready
   k8s_info:
     api_version: apps/v1
     kind: Deployment
@@ -96,7 +95,7 @@
   delay: 10
   until: r_logging_deploy.resources[0].status.readyReplicas == 1
 
-- name: Check if ElasticSearch Operator is ready
+- name: Evaluate ElasticSearch Operator is ready
   k8s_info:
     api_version: apps/v1
     kind: Deployment
@@ -107,12 +106,7 @@
   delay: 10
   until: r_es_deploy.resources[0].status.readyReplicas == 1
 
-# - name: Result
-#   debug:
-#     msg: "{{r_codeready_crd}}"
-
-
-- name: Check Logging Instance
+- name: Evaluate Logging Instance
   k8s:
     state: present
     merge_type:

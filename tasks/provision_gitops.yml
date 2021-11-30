@@ -14,7 +14,7 @@
         source: redhat-operators
         sourceNamespace: openshift-marketplace
 
-- name: Waiting for GitOps Subscription to complete
+- name: Wait for GitOps Subscription to complete
   shell: set -o pipefail && oc get csv -n openshift-operators | grep openshift-gitops-operator
   register: install_status
   until: "'Succeeded' in install_status.stdout"

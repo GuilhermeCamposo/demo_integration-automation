@@ -3,7 +3,7 @@
   pause:
       minutes: 1
 
-- name: Evaluate '{{ cicd_project }}' project
+- name: Evaluate {{ cicd_project }} project
   k8s:
     state: present
     kind: Project
