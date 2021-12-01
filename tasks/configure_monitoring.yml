@@ -41,7 +41,12 @@
     state: present
     resource_definition: "{{ lookup('template', 'grafana_datasource.yml.j2') }}"
 
-- name: Evaluate Grafana Dashboard
+- name: Evaluate Salesforce Dashboard
   k8s:
     state: present
-    resource_definition: "{{ lookup('template', 'grafana_dashboard.yml.j2') }}"
+    resource_definition: "{{ lookup('template', 'grafana_salesforce_dashboard.yml.j2') }}"
+
+- name: Evaluate JVM Dashboard
+  k8s:
+    state: present
+    resource_definition: "{{ lookup('template', 'grafana_jvm_dashboard.yml.j2') }}"
