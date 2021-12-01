@@ -4,12 +4,14 @@ Automation to deploy the Red Hat Integration Demo.
 
 == Tools available
 
-* Camel K Operator
 * OpenShift Logging
 * OpenShift User Workload Monitoring
+* OpenShift Service Mesh
+* Integration with Quay.io
 * OpenShift Pipelines
 * OpenShift GitOps
 * 3scale
+* 3scale wasm filter
 
 
 == Install The Demo Using Ansible
@@ -19,7 +21,7 @@ Automation to deploy the Red Hat Integration Demo.
 [options="header"]
 |=======================
 | Parameter | Example Value                                      | Definition
-| token | sha256~vFanQbthlPKfsaldJT3bdLXIyEkd7ypO_XPygY1DNtQ | access token for a user with cluster-admin previleges
+| token | sha256~vFanQbthlPKfsaldJT3bdLXIyEkd7ypO_XPygY1DNtQ | access token for a user with cluster-admin privileges
 | server    | https://api.mycluster.opentlc.com:6443      | OpenShift cluster API URL
 |=======================
 

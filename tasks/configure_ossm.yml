@@ -11,7 +11,6 @@
         members:
           # a list of projects joined into the service mesh
           - '{{ demo_project }}'
-          - openshift-user-workload-monitoring
 
 - name: Evaluate Gateway
   k8s:
@@ -32,30 +31,6 @@
             protocol: HTTP
           hosts:
           - "*"
-
-- name: Evaluate VirtualService
-  k8s:
-    state: present
-    api_version: networking.istio.io/v1alpha3
-    kind: VirtualService
-    definition:
-      metadata:
-        name: salesforce-webhook-ingestor
-        namespace: '{{ demo_project }}'
-      spec:
-        hosts:
-        - "*"
-        gateways:
-        - rhi-demo-gateway
-        http:
-        - match:
-          - uri:
-              exact: /opportunities
-          route:
-          - destination:
-              host: salesforce-webhook-ingestor
-              port:
-                number: 8080
 
 - name: Evaluate salesforce-webhook-ingestor DestinationRule
   k8s:
@@ -88,6 +63,51 @@
         - name: v1
           labels:
             version: v1
+
+
+- name: Evaluate salesforce-webhook-ingestor VirtualService
+  k8s:
+    state: present
+    api_version: networking.istio.io/v1alpha3
+    kind: VirtualService
+    definition:
+      metadata:
+        name: salesforce-webhook-ingestor
+        namespace: '{{ demo_project }}'
+      spec:
+        hosts:
+        - "*"
+        gateways:
+        - rhi-demo-gateway
+        http:
+        - match:
+          - uri:
+              exact: /opportunities
+          route:
+          - destination:
+              host: salesforce-webhook-ingestor
+              port:
+                number: 8080
+
+- name: Evaluate asana-adapter VirtualService
+  k8s:
+    state: present
+    api_version: networking.istio.io/v1alpha3
+    kind: VirtualService
+    definition:
+      metadata:
+        name: asana-adapter
+        namespace: '{{ demo_project }}'
+      spec:
+        hosts:
+        - asana-adapter.{{ demo_project }}.svc.cluster.local
+        http:
+        - name: asana-adapter-v1
+          route:
+          - destination:
+              host: asana-adapter
+              port:
+                number: 8080
 
 - name: Evaluate salesforce ServiceEntry
   k8s:
@@ -126,6 +146,12 @@
           protocol: HTTPS
         location: MESH_EXTERNAL
         resolution: DNS
+
+- name: Evaluate Network Policy
+  k8s:
+    state: present
+    resource_definition: "{{ lookup('template', 'ossm_network_policy.yml.j2') }}"
+
 
 # - name: Evaluate 3scale ServiceEntry
 #   k8s:
