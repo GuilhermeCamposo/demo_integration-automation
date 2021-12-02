@@ -3,7 +3,7 @@ kind: ServiceMonitor
 metadata:
   labels:
     k8s-app: prometheus-app-monitor
-  name: prometheus-app-monitor
+  name: salesforce-webhook-ingestor
   namespace: '{{ demo_project }}'
 spec:
   endpoints:
@@ -14,3 +14,21 @@ spec:
   selector:
     matchLabels:
       app: salesforce-webhook-ingestor
+---
+
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    k8s-app: prometheus-app-monitor
+  name: asana-adapter
+  namespace: '{{ demo_project }}'
+spec:
+  endpoints:
+  - interval: 30s
+    targetPort: 8080
+    path: /q/metrics
+    scheme: http
+  selector:
+    matchLabels:
+      app: asana-adapter

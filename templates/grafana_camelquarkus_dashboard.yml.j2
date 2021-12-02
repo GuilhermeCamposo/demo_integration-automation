@@ -1,7 +1,7 @@
 apiVersion: integreatly.org/v1alpha1
 kind: GrafanaDashboard
 metadata:
-  name: rhi-demo-dashboard
+  name: camel-quarkus
   labels:
     app: grafana
   namespace: '{{ grafana_project }}'
@@ -26,7 +26,8 @@ spec:
       "editable": true,
       "gnetId": null,
       "graphTooltip": 1,
-      "id": 6,
+      "id": 2,
+      "iteration": 1638457666500,
       "links": [],
       "panels": [
         {
@@ -44,64 +45,99 @@ spec:
           "type": "row"
         },
         {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
           "datasource": null,
-          "description": "process_uptime_seconds{container=\"salesforce-webhook-ingestor\", ",
+          "description": "http_server_requests_seconds_sum",
           "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "thresholds"
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green",
-                    "value": null
-                  }
-                ]
-              },
-              "unit": "dtdhms"
-            },
+            "defaults": {},
             "overrides": []
           },
+          "fill": 1,
+          "fillGradient": 0,
           "gridPos": {
             "h": 6,
-            "w": 6,
+            "w": 5,
             "x": 0,
             "y": 1
           },
-          "id": 16,
-          "options": {
-            "colorMode": "value",
-            "graphMode": "none",
-            "justifyMode": "auto",
-            "orientation": "auto",
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "fields": "/^process_uptime_seconds\\{container=\"salesforce\\-webhook-ingestor\", endpoint=\"8080\", instance=\"10\\.131.0.231:8080\", job=\"salesforce-webhook-ingestor\", namespace=\"rhi-demo\", pod=\"salesforce-webhook-ingestor-b7dbbcfdf-vjbzk\", prometheus=\"openshift-user-workload-monitoring/user-workload\", service=\"salesforce-webhook-ingestor\"\\}$/",
-              "values": false
-            },
-            "text": {},
-            "textMode": "auto"
+          "hiddenSeries": false,
+          "id": 30,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
           },
+          "lines": true,
+          "linewidth": 1,
+          "nullPointMode": "null",
+          "options": {
+            "alertThreshold": true
+          },
+          "percentage": false,
           "pluginVersion": "7.5.11",
+          "pointradius": 2,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
           "targets": [
             {
               "exemplar": true,
-              "expr": "process_uptime_seconds{container=\"salesforce-webhook-ingestor\"}",
+              "expr": "http_server_requests_seconds_sum{outcome=\"SUCCESS\", service=\"$service\", instance=\"$instance\"}",
               "interval": "",
-              "legendFormat": "",
+              "legendFormat": "{{status}} - {{uri}}",
               "refId": "A"
             }
           ],
+          "thresholds": [],
           "timeFrom": null,
+          "timeRegions": [],
           "timeShift": null,
-          "title": "process_uptime",
-          "transparent": true,
-          "type": "stat"
+          "title": "http_server_requests_seconds_success",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
         },
         {
           "aliasColors": {},
@@ -118,7 +154,7 @@ spec:
           "gridPos": {
             "h": 6,
             "w": 6,
-            "x": 7,
+            "x": 5,
             "y": 1
           },
           "hiddenSeries": false,
@@ -150,7 +186,7 @@ spec:
           "targets": [
             {
               "exemplar": true,
-              "expr": "http_server_requests_seconds_count{container=\"salesforce-webhook-ingestor\",outcome!~\"SUCCESS\"}",
+              "expr": "http_server_requests_seconds_count{service=\"$service\", instance=\"$instance\",outcome!~\"SUCCESS\"}",
               "interval": "",
               "legendFormat": "{{status}}",
               "refId": "A"
@@ -203,101 +239,6 @@ spec:
           "dashLength": 10,
           "dashes": false,
           "datasource": null,
-          "description": "http_server_requests_seconds_sum",
-          "fieldConfig": {
-            "defaults": {},
-            "overrides": []
-          },
-          "fill": 1,
-          "fillGradient": 0,
-          "gridPos": {
-            "h": 6,
-            "w": 5,
-            "x": 0,
-            "y": 7
-          },
-          "hiddenSeries": false,
-          "id": 30,
-          "legend": {
-            "avg": false,
-            "current": false,
-            "max": false,
-            "min": false,
-            "show": true,
-            "total": false,
-            "values": false
-          },
-          "lines": true,
-          "linewidth": 1,
-          "nullPointMode": "null",
-          "options": {
-            "alertThreshold": true
-          },
-          "percentage": false,
-          "pluginVersion": "7.5.11",
-          "pointradius": 2,
-          "points": false,
-          "renderer": "flot",
-          "seriesOverrides": [],
-          "spaceLength": 10,
-          "stack": false,
-          "steppedLine": false,
-          "targets": [
-            {
-              "exemplar": true,
-              "expr": "http_server_requests_seconds_sum{uri=\"/opportunities\",outcome=\"SUCCESS\"}",
-              "interval": "",
-              "legendFormat": "{{status}}",
-              "refId": "A"
-            }
-          ],
-          "thresholds": [],
-          "timeFrom": null,
-          "timeRegions": [],
-          "timeShift": null,
-          "title": "http_server_requests_seconds_success",
-          "tooltip": {
-            "shared": true,
-            "sort": 0,
-            "value_type": "individual"
-          },
-          "type": "graph",
-          "xaxis": {
-            "buckets": null,
-            "mode": "time",
-            "name": null,
-            "show": true,
-            "values": []
-          },
-          "yaxes": [
-            {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            },
-            {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            }
-          ],
-          "yaxis": {
-            "align": false,
-            "alignLevel": null
-          }
-        },
-        {
-          "aliasColors": {},
-          "bars": false,
-          "dashLength": 10,
-          "dashes": false,
-          "datasource": null,
           "description": "http_server_bytes_read_max{container=\"salesforce-webhook-ingestor\"}",
           "fieldConfig": {
             "defaults": {},
@@ -308,8 +249,8 @@ spec:
           "gridPos": {
             "h": 6,
             "w": 5,
-            "x": 5,
-            "y": 7
+            "x": 11,
+            "y": 1
           },
           "hiddenSeries": false,
           "id": 10,
@@ -340,7 +281,7 @@ spec:
           "targets": [
             {
               "exemplar": true,
-              "expr": "http_server_bytes_read_max{container=\"salesforce-webhook-ingestor\"}",
+              "expr": "http_server_bytes_read_max{service=\"$service\", instance=\"$instance\"}",
               "interval": "",
               "legendFormat": "{{ instance }}",
               "refId": "A"
@@ -394,7 +335,7 @@ spec:
             "h": 1,
             "w": 24,
             "x": 0,
-            "y": 13
+            "y": 7
           },
           "id": 36,
           "panels": [],
@@ -426,7 +367,7 @@ spec:
             "h": 6,
             "w": 6,
             "x": 0,
-            "y": 14
+            "y": 8
           },
           "id": 26,
           "options": {
@@ -448,7 +389,7 @@ spec:
           "targets": [
             {
               "exemplar": true,
-              "expr": "CamelExchangesTotal_total{ container=\"salesforce-webhook-ingestor\"}",
+              "expr": "CamelExchangesTotal_total{ service=\"$service\", instance=\"$instance\"}",
               "interval": "",
               "legendFormat": "",
               "refId": "A"
@@ -492,7 +433,7 @@ spec:
             "h": 6,
             "w": 6,
             "x": 6,
-            "y": 14
+            "y": 8
           },
           "id": 18,
           "options": {
@@ -514,7 +455,7 @@ spec:
           "targets": [
             {
               "exemplar": true,
-              "expr": "CamelExchangesFailuresHandled_total{container=\"salesforce-webhook-ingestor\"}",
+              "expr": "CamelExchangesFailuresHandled_total{service=\"$service\", instance=\"$instance\"}",
               "interval": "",
               "legendFormat": "",
               "refId": "A"
@@ -531,7 +472,70 @@ spec:
       "style": "dark",
       "tags": [],
       "templating": {
-        "list": []
+        "list": [
+          {
+            "allValue": null,
+            "current": {
+              "selected": false,
+              "text": "salesforce-webhook-ingestor",
+              "value": "salesforce-webhook-ingestor"
+            },
+            "datasource": null,
+            "definition": "label_values(service)",
+            "description": null,
+            "error": null,
+            "hide": 0,
+            "includeAll": false,
+            "label": "Service",
+            "multi": false,
+            "name": "service",
+            "options": [],
+            "query": {
+              "query": "label_values(service)",
+              "refId": "StandardVariableQuery"
+            },
+            "refresh": 2,
+            "regex": "",
+            "skipUrlSync": false,
+            "sort": 1,
+            "tagValuesQuery": "",
+            "tags": [],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+          },
+          {
+            "allValue": null,
+            "current": {
+              "selected": false,
+              "text": "10.131.0.100:8080",
+              "value": "10.131.0.100:8080"
+            },
+            "datasource": null,
+            "definition": "label_values(jvm_memory_used_bytes{service=\"$service\"}, instance)",
+            "description": null,
+            "error": null,
+            "hide": 0,
+            "includeAll": false,
+            "label": "Instance",
+            "multi": false,
+            "name": "instance",
+            "options": [],
+            "query": {
+              "query": "label_values(jvm_memory_used_bytes{service=\"$service\"}, instance)",
+              "refId": "StandardVariableQuery"
+            },
+            "refresh": 2,
+            "regex": "",
+            "skipUrlSync": false,
+            "sort": 0,
+            "tagValuesQuery": "",
+            "tags": [],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+          }
+        ]
       },
       "time": {
         "from": "now-1h",
@@ -542,9 +546,9 @@ spec:
         "time_options": []
       },
       "timezone": "browser",
-      "title": "Salesforce Webhook Ingestor",
+      "title": "Camel - Quarkus",
       "uid": "c66674e6eea677add160c64906727bea19157897",
       "version": 1
     }
-  name: rhi-demo-dashboard.json
+  name: camel-quarkus.json
 {% endraw %}
