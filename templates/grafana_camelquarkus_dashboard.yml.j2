@@ -188,7 +188,7 @@ spec:
               "exemplar": true,
               "expr": "http_server_requests_seconds_count{service=\"$service\", instance=\"$instance\",outcome!~\"SUCCESS\"}",
               "interval": "",
-              "legendFormat": "{{status}}",
+              "legendFormat": "{{status}} - {{uri}}",
               "refId": "A"
             }
           ],
