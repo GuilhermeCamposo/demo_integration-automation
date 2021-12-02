@@ -5,6 +5,7 @@ metadata:
   labels:
     app: grafana
   namespace: '{{ grafana_project }}'
+{% raw %}  
 spec:
   json: |
       {
@@ -3746,3 +3747,4 @@ spec:
         "version": 1
       }
   name: jvm-dashboard.json
+{% endraw %}
