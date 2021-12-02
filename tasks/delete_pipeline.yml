@@ -1,4 +1,4 @@
-- name: Check Pipelines Subscription
+- name: Delete Pipelines Subscription
   k8s:
     state: absent
     kind: Subscription
