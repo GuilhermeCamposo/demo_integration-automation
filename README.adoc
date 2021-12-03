@@ -34,6 +34,9 @@ Before running the Ansible playbook you must create a file to set some required 
 asana_pat:
 asana_workspace_gid:
 asana_project_gid:
+asana_field_opportunity:
+asana_field_customer:
+asana_field_booking: 
 sf_client_id:
 sf_client_secret:
 sf_username:
