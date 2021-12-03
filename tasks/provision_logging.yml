@@ -113,3 +113,29 @@
     - strategic-merge
     - merge
     definition: "{{ lookup('file', './files/logging-instance.yml' ) | from_yaml }}"
+
+- name: Evaluate Log Forward
+  k8s:
+    state: present
+    kind: ClusterLogForwarder
+    api_version: logging.openshift.io/v1
+    definition:
+        metadata:
+          name: instance
+          namespace: openshift-logging
+        spec:
+          inputs:
+            - application:
+                namespaces:
+                  - rhi-demo
+              name: myNamespace
+          outputDefaults:
+            elasticsearch:
+              structuredTypeName: json-format
+          pipelines:
+            - inputRefs:
+                - myNamespace
+              name: enable-default-log-store
+              outputRefs:
+                - default
+              parse: json
