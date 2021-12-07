@@ -16,7 +16,7 @@
 
 - name: Delete {{ cicd_project }} project
   k8s:
-    state: present
+    state: absent
     kind: Project
     api_version: project.openshift.io/v1
     definition:
