@@ -1,0 +1,5 @@
+- name: Provision Log Stack
+  include_tasks: tasks/provision_logging.yml
+  when:
+    - enable_logging
+    - provision_demo | bool

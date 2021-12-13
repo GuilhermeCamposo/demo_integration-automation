@@ -1,4 +1,4 @@
-- name: Check OpenShift GitOps Subscription
+- name: Evaluate OpenShift GitOps Subscription
   k8s:
     state: present
     kind: Subscription

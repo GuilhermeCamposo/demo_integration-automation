@@ -1,4 +1,0 @@
-- name: Evaluate Camel K Subscription
-  k8s:
-    state: present
-    resource_definition: "{{ lookup('template', 'camelk_subscription.yml.j2') }}"

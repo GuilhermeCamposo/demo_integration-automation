@@ -1,0 +1,11 @@
+- name: Provision GitOps
+  include_tasks: provision_gitops.yml
+  when: provision_demo | bool
+
+- name: Configure RHI Demo GitOps
+  include_tasks: configure_gitops.yml
+  when: provision_demo | bool
+
+- name: Delete GitOps
+  include_tasks: delete_gitops.yml
+  when: delete_demo | bool

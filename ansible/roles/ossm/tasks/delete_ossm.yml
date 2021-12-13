@@ -1,7 +1,7 @@
 - name: Delete Istio Control Plane instance
   k8s:
     state: absent
-    src: templates/ossm_control_plane.yml.j2
+    resource_definition: "{{ lookup('template', 'ossm_control_plane.yml.j2') }}"
 
 - name: Delete Jaeger Subscription
   k8s:
@@ -22,6 +22,23 @@
       metadata:
         name: kiali-operator
         namespace: openshift-operators
+
+- name: Delete Service Mesh Subscription
+  k8s:
+    state: present
+    api_version: operators.coreos.com/v1alpha1
+    kind: Subscription
+    definition:
+      metadata:
+        name: redhat-service-mesh-operator
+        namespace: openshift-operators
+      spec:
+        channel: stable
+        installPlanApproval: Automatic
+        name: servicemeshoperator
+        source: redhat-operators
+        sourceNamespace: openshift-marketplace
+
 
 - name: Delete istio-system Namespace
   k8s:

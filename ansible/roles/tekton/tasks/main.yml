@@ -1,0 +1,15 @@
+- name: Provision Pipelines
+  include_tasks: provision_pipelines.yml
+  when:
+    - enable_pipelines
+    - provision_demo | bool
+
+- name: Configure RHI Demo Pipelines
+  include_tasks: configure_pipelines.yml
+  when:
+    - enable_pipelines
+    - provision_demo | bool
+
+- name: Delete Pipeline
+  include_tasks: delete_pipeline.yml
+  when: delete_demo | bool
