@@ -36,19 +36,22 @@ asana_workspace_gid:
 asana_project_gid:
 asana_field_opportunity:
 asana_field_customer:
-asana_field_booking: 
+asana_field_booking:
 sf_client_id:
 sf_client_secret:
 sf_username:
 sf_password:
 sf_instance:
 docker_config:
+registry_url:
+ingestor_git:
+asana_adapter_git:
 ----
 
 === Extra-vars definitions
 
-* For information about Asana access properties look at https://gitlab.com/rhi-demo/asana-adapter/-/blob/main/README.adoc[asana-adapter's git repository].
-* For information about Salesforce access properties look at https://gitlab.com/rhi-demo/salesforce-webhook-ingestor/-/blob/main/README.adoc[salesforce-webhook-ingestor's git repository].
+* For information about Asana access properties look at asana-adapter's git repository.
+* For information about Salesforce access properties look at salesforce-webhook-ingestor's git repository.
 
 
 === Deploying the demo

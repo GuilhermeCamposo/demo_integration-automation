@@ -9,9 +9,6 @@
     threescale_account_user: rhidemouser
     threescale_account_org: rhi-demo-org
     threescale_account_password: rhidemopassword
-    registry_url: quay.io/gcamposo
-    ingestor_git: https://gitlab.com/rhi-demo/salesforce-webhook-ingestor.git
-    asana_adapter_git: https://gitlab.com/rhi-demo/asana-adapter.git
     insecure_skip_tls_verify: true
     enable_logging: true
     enable_user_workload_monitoring: true
