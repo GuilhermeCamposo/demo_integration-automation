@@ -72,8 +72,10 @@
         name: argocd
 
     - name: Include Tekton role
+      when: enable_pipelines | bool
       include_role:
         name: tekton
+
 
     - name: Delete {{ demo_project }} Namespace
       when: delete_demo | bool

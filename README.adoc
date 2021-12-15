@@ -31,19 +31,28 @@ Before running the Ansible playbook you must create a file to set some required 
 
 
 ----
+# Asana access and configuration information
 asana_pat:
 asana_workspace_gid:
 asana_project_gid:
 asana_field_opportunity:
 asana_field_customer:
 asana_field_booking:
+
+# Salesforce access information
 sf_client_id:
 sf_client_secret:
 sf_username:
 sf_password:
 sf_instance:
+
+# In order to push the image to a private registry a .dockerconfigjson needs to be provided. You can skip this configuration if you don't intend to show Pipelines.
 docker_config:
+
+# This is the image registry URL used in the demo. You can skip this configuration if you don't intend to show Pipelines.
 registry_url:
+
+# These are the URL for the applications repositories. This is needed to build the image and deploy the application
 ingestor_git:
 asana_adapter_git:
 ----

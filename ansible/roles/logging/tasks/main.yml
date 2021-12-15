@@ -1,5 +1,9 @@
-- name: Provision Log Stack
+- name: Provision Logging
   include_tasks: tasks/provision_logging.yml
   when:
     - enable_logging
     - provision_demo | bool
+
+- name: Delete Logging
+  include_tasks: delete_logging.yml
+  when: delete_demo | bool
