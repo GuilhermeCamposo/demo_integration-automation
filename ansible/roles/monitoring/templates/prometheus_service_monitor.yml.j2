@@ -26,8 +26,8 @@ metadata:
 spec:
   endpoints:
   - interval: 30s
-    targetPort: 8080
-    path: /q/metrics
+    targetPort: 15020
+    path: /stats/prometheus
     scheme: http
   selector:
     matchLabels:
