@@ -11,7 +11,6 @@ Automation to deploy the Red Hat Integration Demo.
 * OpenShift Pipelines
 * OpenShift GitOps
 * 3scale
-* 3scale wasm filter
 
 
 == Install The Demo Using Ansible
@@ -69,12 +68,12 @@ asana_adapter_git:
 
 === Deleting the demo
 
-    ansible-playbook -e token= -e server=  -e delete_demo=true -e provision_demo=false playbook.yml
+    ansible-playbook -e token= -e server=  -e delete_demo=true playbook.yml
 
 == Additional configurations
 
-Once the demo is deployed you may add additional configurations that are not covered by the automation.
+Once the demo is deployed you may need to do additional configurations that are not covered by the automation.
 
 === Kibana first search
 
-When opening Kibana for the fist time you need to map the correct index for the searches.
+When opening Kibana for the fist time you need to map the correct index for the searches. Use something like `app*` to do it.

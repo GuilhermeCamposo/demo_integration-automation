@@ -9,7 +9,6 @@
     enable_logging: true
     enable_user_workload_monitoring: true
     enable_pipelines: true
-    provision_demo: true
     delete_demo: false
   tasks:
 
@@ -25,7 +24,7 @@
       ignore_errors: no
 
     - name: Evaluate {{ demo_project }} Namespace
-      when: provision_demo | bool
+      when: not delete_demo
       k8s:
         state: present
         kind: Project
@@ -38,7 +37,7 @@
               openshift.io/display-name: "RHI Demo Project"
 
     - name: Evaluate Operator Group
-      when: provision_demo | bool
+      when: not delete_demo
       k8s:
         state: present
         api_version: operators.coreos.com/v1

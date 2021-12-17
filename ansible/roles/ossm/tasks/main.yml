@@ -1,10 +1,10 @@
 - name: Provision Service Mesh
   include_tasks: provision_ossm.yml
-  when: provision_demo | bool
+  when: not delete_demo
 
 - name: Configure Service Mesh
   include_tasks: configure_ossm.yml
-  when: provision_demo | bool
+  when: not delete_demo
 
 - name: Delete Service Mesh
   include_tasks: tasks/delete_ossm.yml
