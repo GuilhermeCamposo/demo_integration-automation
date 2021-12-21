@@ -1,0 +1,49 @@
+- name: Get 3scale system-seed secret
+  k8s_info:
+    kind: Secret
+    name:  system-seed
+    namespace: '{{ threescale_project }}'
+    api_version: v1
+  register: r_system_seed
+  until:
+    - r_system_seed.resources is defined
+    - r_system_seed.resources[0] is defined
+  retries: 10
+  delay: 15
+
+- name: Set 3scale user
+  set_fact:
+    threescale_user: '{{ r_system_seed.resources[0].data.ADMIN_USER | b64decode }}'
+
+- name: Set 3scale user
+  set_fact:
+    threescale_password: '{{ r_system_seed.resources[0].data.ADMIN_PASSWORD | b64decode }}'
+
+- name: Get openshift-gitops-cluster Secret
+  k8s_info:
+    kind: Secret
+    name:  openshift-gitops-cluster
+    namespace: openshift-gitops
+    api_version: v1
+  register: r_gitops_secret
+  until:
+    - r_gitops_secret.resources is defined
+  retries: 10
+  delay: 15
+
+- name: Set argo_password
+  set_fact:
+    argo_password: "{{ r_gitops_secret.resources[0].data['admin.password'] | b64decode }}"
+
+- name: Display Environment Information
+  debug:
+     msg:
+       - '3scale Endpoint: https://salesforce-webhook-ingestor-product-3scale-apicast-staging.apps.{{ domain }}'
+       - '3scale User: {{ threescale_user }}'
+       - '3scale Password: {{ threescale_password }}'
+       - '------------------------------------------'
+       - 'ArgoCD User: admin'
+       - 'ArgoCD Password: {{ argo_password }}'
+       - '------------------------------------------'
+       - 'Grafana User: {{ grafana_user }}'
+       - 'Grafana Password: {{ grafana_password }}'
