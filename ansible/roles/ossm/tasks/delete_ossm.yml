@@ -1,10 +1,16 @@
 - name: Delete Istio Control Plane instance
   k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     state: absent
     resource_definition: "{{ lookup('template', 'ossm_control_plane.yml.j2') }}"
 
 - name: Delete Jaeger Subscription
   k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     state: absent
     api_version: operators.coreos.com/v1alpha1
     kind: Subscription
@@ -15,6 +21,9 @@
 
 - name: Delete Kiali Subscription
   k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     state: absent
     api_version: operators.coreos.com/v1alpha1
     kind: Subscription
@@ -25,6 +34,9 @@
 
 - name: Delete Service Mesh Subscription
   k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     state: present
     api_version: operators.coreos.com/v1alpha1
     kind: Subscription
@@ -42,6 +54,9 @@
 
 - name: Delete istio-system Namespace
   k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     api_version: v1
     kind: Namespace
     name: istio-system

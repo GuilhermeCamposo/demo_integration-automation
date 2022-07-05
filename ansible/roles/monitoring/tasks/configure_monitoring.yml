@@ -1,10 +1,16 @@
 - name: Evaluate Service Monitor
   k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     state: present
     resource_definition: "{{ lookup('template', 'prometheus_service_monitor.yml.j2') }}"
 
 - name: Get Grafana ServiceAccount
   k8s_info:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     kind: ServiceAccount
     name:  grafana-serviceaccount
     namespace: '{{ grafana_project }}'
@@ -21,6 +27,9 @@
 
 - name: Evaluate Grafana ServiceAccount permissons
   k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     state: present
     api_version: rbac.authorization.k8s.io/v1
     kind: ClusterRoleBinding
@@ -38,15 +47,24 @@
 
 - name: Evaluate Grafana Datasource
   k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     state: present
     resource_definition: "{{ lookup('template', 'grafana_datasource.yml.j2') }}"
 
 - name: Evaluate Camel Quarkus Dashboard
   k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     state: present
     resource_definition: "{{ lookup('template', 'grafana_camelquarkus_dashboard.yml.j2') }}"
 
 - name: Evaluate JVM Dashboard
   k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     state: present
     resource_definition: "{{ lookup('template', 'grafana_jvm_dashboard.yml.j2') }}"

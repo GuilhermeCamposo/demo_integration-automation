@@ -1,5 +1,8 @@
 - name: Evaluate ElasticSearch Namespace
   k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     state: present
     kind: Namespace
     api_version: v1
@@ -13,6 +16,9 @@
 
 - name: Evaluate openshift-operators-redhat OperatorGroup
   k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     state: present
     kind: OperatorGroup
     api_version: operators.coreos.com/v1
@@ -24,6 +30,9 @@
 
 - name: Evaluate ElasticSearch Subscription
   k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     state: present
     kind: Subscription
     api_version: operators.coreos.com/v1alpha1
@@ -40,6 +49,9 @@
 
 - name: Evaluate Logging Operator Namespace
   k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     state: present
     kind: Namespace
     api_version: v1
@@ -53,6 +65,9 @@
 
 - name: Evaluate openshift-logging OperatorGroup
   k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     state: present
     kind: OperatorGroup
     api_version: operators.coreos.com/v1
@@ -66,6 +81,9 @@
 
 - name: Evaluate logging Subscription
   k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     state: present
     kind: Subscription
     api_version: operators.coreos.com/v1alpha1
@@ -79,24 +97,28 @@
           source: redhat-operators
           sourceNamespace: openshift-marketplace
 
-# TODO replace this with a smatter way of checking
-- name: Wait for the Logging Operator deployments to be created
-  pause:
-      minutes: 2
-
-- name: Evaluate Logging Operator is ready
+- name: Wait Logging Operator
   k8s_info:
-    api_version: apps/v1
-    kind: Deployment
-    name: cluster-logging-operator
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
+    api_version: v1
+    kind: Pod
     namespace: openshift-logging
-  register: r_logging_deploy
-  retries: 50
+    label_selectors:
+      - name = cluster-logging-operator
+    field_selectors:
+      - status.phase=Running
+  register: r_logging_pod
+  retries: 20
   delay: 10
-  until: r_logging_deploy.resources[0].status.readyReplicas == 1
+  until: r_logging_pod.resources | list | length == 1
 
 - name: Evaluate ElasticSearch Operator is ready
   k8s_info:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     api_version: apps/v1
     kind: Deployment
     name: elasticsearch-operator
@@ -108,6 +130,9 @@
 
 - name: Evaluate Logging Instance
   k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     state: present
     merge_type:
     - strategic-merge
@@ -116,6 +141,9 @@
 
 - name: Evaluate Log Forward
   k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     state: present
     kind: ClusterLogForwarder
     api_version: logging.openshift.io/v1

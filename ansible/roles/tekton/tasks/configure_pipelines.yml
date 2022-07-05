@@ -1,10 +1,8 @@
-# TODO replace this with a smatter way of checking
-- name: Wait for the Operator APIs to be ready
-  pause:
-      minutes: 1
-
 - name: Evaluate {{ cicd_project }} project
   k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     state: present
     kind: Project
     api_version: project.openshift.io/v1
@@ -17,6 +15,9 @@
 
 - name: Evalute Pipeline ServiceAccount Permissions
   k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     state: present
     api_version: rbac.authorization.k8s.io/v1
     kind: RoleBinding
@@ -35,11 +36,17 @@
 
 - name: Evaluate quay-secret
   k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     state: present
     resource_definition: "{{ lookup('template', 'secret_quay.yml.j2') }}"
 
 - name: Evaluate ArgoCD Secret
   k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     state: present
     kind: Secret
     api_version: v1
@@ -54,6 +61,9 @@
 
 - name: Evaluate ArgoCD ConfigMap
   k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     state: present
     kind: ConfigMap
     api_version: v1
@@ -66,30 +76,48 @@
 
 - name: Evaluate PVCs
   k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     state: present
     resource_definition: "{{ lookup('template', 'tekton_pvcs.yml.j2') }}"
 
 - name: Evaluate buildah Task
   k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     state: present
     resource_definition: "{{ lookup('template', 'tekton_task_buildah.yml.j2') }}"
 
 - name: Evaluate maven-version Task
   k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     state: present
     resource_definition: "{{ lookup('template', 'tekton_task_maven_version.yml.j2') }}"
 
 - name: Evaluate argo-sync Task
   k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     state: present
     resource_definition: "{{ lookup('template', 'tekton_task_argo.yml.j2') }}"
 
 - name: Evaluate salesforce-webhook-ingestor Pipeline
   k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     state: present
     resource_definition: "{{ lookup('template', 'tekton_pipeline_ingestor.yml.j2') }}"
 
 - name: Evaluate asana-adapter Pipeline
   k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     state: present
     resource_definition: "{{ lookup('template', 'tekton_pipeline_asana_adapter.yml.j2') }}"

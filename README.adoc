@@ -26,7 +26,7 @@ Automation to deploy the Red Hat Integration Demo.
 
 === Create an extra-vars file
 
-Before running the Ansible playbook you must create a file to set some required credentials por the applications. You can use the following text as an template.
+Before running the Ansible playbook you must create a file to set some required credentials by the applications. You can use the following text as an template.
 
 
 ----

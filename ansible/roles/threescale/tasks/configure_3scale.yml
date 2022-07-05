@@ -1,5 +1,8 @@
 - name: Get system-seed secret
   k8s_info:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     kind: Secret
     name:  system-seed
     namespace: '{{ threescale_project }}'
@@ -30,11 +33,17 @@
 
 - name: Evaluate backend
   k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     state: present
     resource_definition: "{{ lookup('template', '3scale_backend_salesforce.yml.j2') }}"
 
 - name: Check if backend is Synced
   k8s_info:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     kind: Backend
     name:  salesforce-webhook-ingestor-backend
     namespace: '{{ threescale_project }}'
@@ -48,11 +57,17 @@
 
 - name: Evaluate Product
   k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     state: present
     resource_definition: "{{ lookup('template', '3scale_product_salesforce.yml.j2') }}"
 
 - name: Check if Product is Synced
   k8s_info:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     kind: Product
     name:  salesforce-webhook-ingestor-product
     namespace: '{{ threescale_project }}'

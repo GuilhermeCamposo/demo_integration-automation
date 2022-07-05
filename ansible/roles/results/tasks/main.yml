@@ -1,5 +1,8 @@
 - name: Get 3scale system-seed secret
   k8s_info:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     kind: Secret
     name:  system-seed
     namespace: '{{ threescale_project }}'
@@ -21,6 +24,9 @@
 
 - name: Get openshift-gitops-cluster Secret
   k8s_info:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     kind: Secret
     name:  openshift-gitops-cluster
     namespace: openshift-gitops

@@ -1,5 +1,8 @@
 - name: Evaluate openshift-operators Namespace
   k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     api_version: v1
     kind: Namespace
     name: openshift-operators
@@ -7,6 +10,9 @@
 
 - name: Evaluate Jaeger Subscription
   k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     state: present
     api_version: operators.coreos.com/v1alpha1
     kind: Subscription
@@ -21,17 +27,28 @@
         source: redhat-operators
         sourceNamespace: openshift-marketplace
 
-- name: Wait for Jaeger subscription to complete
-  shell: set -o pipefail && oc get csv | grep jaeger-operator
-  register: install_status
-  until: "'Succeeded' in install_status.stdout"
+- name: Wait Jaeger Operator
+  k8s_info:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
+    api_version: v1
+    kind: Pod
+    namespace: openshift-operators
+    label_selectors:
+      - name = jaeger-operator
+    field_selectors:
+      - status.phase=Running
+  register: r_jaeger_pod
   retries: 20
-  delay: 15
-  args:
-    executable: /bin/bash
+  delay: 10
+  until: r_jaeger_pod.resources | list | length == 1
 
 - name: Evaluate Kiali Subscription
   k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     state: present
     api_version: operators.coreos.com/v1alpha1
     kind: Subscription
@@ -46,17 +63,28 @@
         source: redhat-operators
         sourceNamespace: openshift-marketplace
 
-- name: Wait for Kiali subscription to complete
-  shell: set -o pipefail && oc get csv | grep kiali-operator
-  register: install_status
-  until: "'Succeeded' in install_status.stdout"
+- name: Wait Kiali Operator
+  k8s_info:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
+    api_version: v1
+    kind: Pod
+    namespace: openshift-operators
+    label_selectors:
+      - app = kiali-operator
+    field_selectors:
+      - status.phase=Running
+  register: r_kiali_pod
   retries: 20
-  delay: 15
-  args:
-    executable: /bin/bash
+  delay: 10
+  until: r_kiali_pod.resources | list | length == 1
 
 - name: Evaluate Service Mesh Subscription
   k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     state: present
     api_version: operators.coreos.com/v1alpha1
     kind: Subscription
@@ -71,22 +99,28 @@
         source: redhat-operators
         sourceNamespace: openshift-marketplace
 
-- name: Wait for Service Mesh Subscription to Complete
-  shell:  set -o pipefail && oc get csv | grep servicemeshoperator
-  register: install_status
-  until: "'Succeeded' in install_status.stdout"
+- name: Wait Istio Operator
+  k8s_info:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
+    api_version: v1
+    kind: Pod
+    namespace: openshift-operators
+    label_selectors:
+      - name = istio-operator
+    field_selectors:
+      - status.phase=Running
+  register: r_istio_pod
   retries: 20
-  delay: 15
-  args:
-    executable: /bin/bash
-
-# TODO replace this with a smatter way of checking
-- name: Wait for the Service Mesh APIs to be ready
-  pause:
-      minutes: 2
+  delay: 10
+  until: r_istio_pod.resources | list | length == 1
 
 - name: Evaluate istio-system Namespace
   k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     api_version: v1
     kind: Namespace
     name: istio-system
@@ -94,14 +128,26 @@
 
 - name: Evaluate  IstioControlPlane instance
   k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
     state: present
     resource_definition: "{{ lookup('template', 'ossm_control_plane.yml.j2') }}"
 
-- name: Wait for Service Mesh instance to be ready
-  shell: set -o pipefail && oc get servicemeshcontrolplane full-install -n istio-system | grep full-install
-  register: install_status
-  until: "'ComponentsReady' in install_status.stdout"
-  retries: 30
+- name: Wait for Istio Instance
+  k8s_info:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
+    api_version: maistra.io/v2
+    kind: ServiceMeshControlPlane
+    namespace: istio-system
+    name: full-install
+  register: istio
+  until:
+    - istio is defined
+    - istio.resources[0].status.readiness is defined
+    - istio.resources[0].status.readiness.components is defined
+    - istio.resources[0].status.readiness.components.pending | length == 0
+  retries: 20
   delay: 30
-  args:
-    executable: /bin/bash
