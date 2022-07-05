@@ -20,7 +20,6 @@
         name: jaeger-product
         source: redhat-operators
         sourceNamespace: openshift-marketplace
-        startingCSV: jaeger-operator.v1.28.0
 
 - name: Wait for Jaeger subscription to complete
   shell: set -o pipefail && oc get csv | grep jaeger-operator
@@ -46,7 +45,6 @@
         name: kiali-ossm
         source: redhat-operators
         sourceNamespace: openshift-marketplace
-        startingCSV: kiali-operator.v1.36.6
 
 - name: Wait for Kiali subscription to complete
   shell: set -o pipefail && oc get csv | grep kiali-operator

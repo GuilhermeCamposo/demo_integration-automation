@@ -64,11 +64,13 @@ asana_adapter_git:
 
 === Deploying the demo
 
-    ansible-playbook -e token= -e server=  --extra-vars @extra-vars.yml playbook.yml
+Export `token` and `server` as environment variable, then run under the `ansible` folder:
+
+    ansible-playbook -e token=${token} -e server=${server}  --extra-vars @extra-vars.yml playbook.yml
 
 === Deleting the demo
 
-    ansible-playbook -e token= -e server=  -e delete_demo=true playbook.yml
+    ansible-playbook -e token=${token} -e server=${server}  -e delete_demo=true playbook.yml
 
 == Additional configurations
 

@@ -1,7 +1,32 @@
-# TODO replace this with a smatter way of checking
-- name: Wait for the 3scale APIs to be ready
-  pause:
-      minutes: 1
+- name: Get system-seed secret
+  k8s_info:
+    kind: Secret
+    name:  system-seed
+    namespace: '{{ threescale_project }}'
+    api_version: v1
+  register: r_system_seed
+  until:
+    - r_system_seed.resources is defined
+    - r_system_seed.resources[0] is defined
+  retries: 10
+  delay: 15
+
+- name: Set admin token
+  set_fact:
+    threescale_token: '{{ r_system_seed.resources[0].data.ADMIN_ACCESS_TOKEN | b64decode }}'
+
+- name: Test 3scale API Service
+  uri:
+    url: https://3scale-admin.apps.{{ domain }}/admin/api/services.json
+    validate_certs: false
+    body_format: form-urlencoded
+    method: GET
+    body:
+      access_token: '{{ threescale_token }}'
+  register: result
+  until: result.status == 200
+  retries: 10
+  delay: 15
 
 - name: Evaluate backend
   k8s:
@@ -38,23 +63,6 @@
     - r_product.resources[0].status.productId is defined
   retries: 10
   delay: 15
-
-- name: Get system-seed secret
-  k8s_info:
-    kind: Secret
-    name:  system-seed
-    namespace: '{{ threescale_project }}'
-    api_version: v1
-  register: r_system_seed
-  until:
-    - r_system_seed.resources is defined
-    - r_system_seed.resources[0] is defined
-  retries: 10
-  delay: 15
-
-- name: Set admin token
-  set_fact:
-    threescale_token: '{{ r_system_seed.resources[0].data.ADMIN_ACCESS_TOKEN | b64decode }}'
 
 - name: Create Application Plan
   uri:
