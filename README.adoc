@@ -2,16 +2,47 @@
 
 Automation to deploy the Red Hat Integration Demo.
 
-== Tools available
+== Tools Available
 
-* OpenShift Logging
-* OpenShift User Workload Monitoring
-* OpenShift Service Mesh
-* Integration with Quay.io
-* OpenShift Pipelines
-* OpenShift GitOps
-* 3scale
+=== OpenShift Logging
 
+Visualize the integration logs using Kibana. The log content is mapped using LogForwarding rules.
+
+image::./img/kibana-dashboard.png[Kibana Dashboard]
+
+=== OpenShift User Workload Monitoring
+
+Check the application state using customized Grafana dashboards.
+
+image::./img/grafana-dashboard.png[Grafana Dashboard]
+
+=== OpenShift Service Mesh
+
+Visualize the integration topology using Kiali.
+
+image::./img/service-mesh.png[Kiali Dashboard]
+
+=== Integration with Quay.io
+
+The images created in the demo are stored in Quay.io.
+
+image::./img/quay.png[Quay Dashboard]
+
+=== OpenShift Pipelines
+
+Create images and upload them to an external service registry using Tekton Pipelines.
+
+image::./img/tekton-pipelines.png[Tekton View]
+
+=== OpenShift GitOps
+
+Deploy application and configuration while enforcing configuration using ArgoCD.
+
+image::./img/argo.png[Argo]
+
+=== 3scale
+
+Expose a REST API on the internet using 3scale.
 
 == Install The Demo Using Ansible
 
