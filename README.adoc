@@ -2,6 +2,22 @@
 
 Automation to deploy the Red Hat Integration Demo.
 
+== Example Use Case
+
+This demo shows how to use integration products and leverage OpenShift features for a enterprise graded deployment.
+
+In this demo a company uses Salesforce to track it's sales engagements and wants to connect those opportunities to it's work management platform, Asana.
+
+These are the required steps for this integration:
+
+* Every time that a new opportunity is created in Salesforce that opportunity will become a task in an Asana project.
+* The opportunity data needs to be enriched before it becomes an Asana task.
+* If the opportunity gets updated, so should be the Asana task.
+
+Graphical representation of the components used to implement this solution:
+
+image::./img/demo-diagram.png[Components diagram]
+
 == Tools Available
 
 === OpenShift Logging
@@ -44,7 +60,20 @@ image::./img/argo.png[Argo]
 
 Expose a REST API on the internet using 3scale.
 
-== Install The Demo Using Ansible
+== Installing the demo using Ansible
+
+=== Resource requirements
+
+[NOTE]
+====
+TBD
+====
+
+=== Ansible requirements
+
+* https://www.ansible.com/[Ansible 3]
+- https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#control-node-requirements[Ansible's requirement]
+* https://pypi.org/project/kubernetes/[Python's Kubernetes module]
 
 === Parameters
 
