@@ -18,6 +18,7 @@
   register: r_grafana_sa
   until:
     - r_grafana_sa.resources is defined
+    - r_grafana_sa.resources[0].secrets is defined
   retries: 10
   delay: 15
 

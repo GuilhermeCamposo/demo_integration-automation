@@ -8,4 +8,4 @@
 
 - name: Delete 3scale
   include_tasks: tasks/delete_3scale.yml
-  when: delete_demo | bool  
+  when: delete_demo | bool

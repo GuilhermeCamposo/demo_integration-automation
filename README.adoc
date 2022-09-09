@@ -1,6 +1,10 @@
 = Red Hat Integration Demo
+:toc:
+:toc-placement!:
 
 Automation to deploy the Red Hat Integration Demo.
+
+toc::[]
 
 == Example Use Case
 
@@ -48,13 +52,18 @@ image::./img/quay.png[Quay Dashboard]
 
 Create images and upload them to an external service registry using Tekton Pipelines.
 
-image::./img/tekton-pipelines.png[Tekton View]
+image::./img/tekton.png[Tekton View]
+
+image::./img/tekton2.png[Tekton View]
 
 === OpenShift GitOps
 
 Deploy application and configuration while enforcing configuration using ArgoCD.
 
-image::./img/argo.png[Argo]
+image::./img/gitops.png[Argo]
+
+image::./img/gitops2.png[Argo]
+
 
 === 3scale
 
@@ -139,3 +148,7 @@ Once the demo is deployed you may need to do additional configurations that are 
 === Kibana first search
 
 When opening Kibana for the fist time you need to map the correct index for the searches. Use something like `app*` to do it.
+
+image::./img/index-pattern.png[Kibana]
+
+image::./img/index-pattern-2.png[Kibana]

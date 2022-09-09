@@ -127,6 +127,8 @@
     state: present
 
 - name: Evaluate  IstioControlPlane instance
+  retries: 5
+  delay: 20
   k8s:
     api_key: '{{ token }}'
     host: '{{ server }}'

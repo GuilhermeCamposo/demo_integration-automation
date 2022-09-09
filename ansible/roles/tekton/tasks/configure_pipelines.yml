@@ -83,6 +83,8 @@
     resource_definition: "{{ lookup('template', 'tekton_pvcs.yml.j2') }}"
 
 - name: Evaluate buildah Task
+  retries: 5
+  delay: 20
   k8s:
     api_key: '{{ token }}'
     host: '{{ server }}'
