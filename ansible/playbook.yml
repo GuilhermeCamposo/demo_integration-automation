@@ -86,6 +86,9 @@
     - name: Delete {{ demo_project }} Namespace
       when: delete_demo | bool
       k8s:
+        api_key: '{{ token }}'
+        host: '{{ server }}'
+        validate_certs: no
         state: absent
         kind: Project
         api_version: project.openshift.io/v1

@@ -1,3 +1,13 @@
+- name: Evaluate istio-system Namespace
+  k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
+    api_version: v1
+    kind: Namespace
+    name: istio-system
+    state: present
+
 - name: Evaluate openshift-operators Namespace
   k8s:
     api_key: '{{ token }}'
@@ -116,19 +126,12 @@
   delay: 10
   until: r_istio_pod.resources | list | length == 1
 
-- name: Evaluate istio-system Namespace
-  k8s:
-    api_key: '{{ token }}'
-    host: '{{ server }}'
-    validate_certs: no
-    api_version: v1
-    kind: Namespace
-    name: istio-system
-    state: present
-
-- name: Evaluate  IstioControlPlane instance
+- name: Evaluate IstioControlPlane instance
   retries: 5
   delay: 20
+  register: result
+  until:
+    - result.failed == false
   k8s:
     api_key: '{{ token }}'
     host: '{{ server }}'

@@ -126,7 +126,9 @@
   register: r_es_deploy
   retries: 50
   delay: 10
-  until: r_es_deploy.resources[0].status.readyReplicas == 1
+  until:
+    -  r_es_deploy.resources[0].status.readyReplicas is defined
+    -  r_es_deploy.resources[0].status.readyReplicas == 1
 
 - name: Evaluate Logging Instance
   k8s:

@@ -37,19 +37,13 @@
     api_key: '{{ token }}'
     host: '{{ server }}'
     validate_certs: no
-    state: present
+    state: absent
     api_version: operators.coreos.com/v1alpha1
     kind: Subscription
     definition:
       metadata:
         name: redhat-service-mesh-operator
         namespace: openshift-operators
-      spec:
-        channel: stable
-        installPlanApproval: Automatic
-        name: servicemeshoperator
-        source: redhat-operators
-        sourceNamespace: openshift-marketplace
 
 
 - name: Delete istio-system Namespace
