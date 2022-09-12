@@ -31,5 +31,4 @@
        - '------------------------------------------'
        - 'ArgoCD: Log in using OpenShift user'
        - '------------------------------------------'
-       - 'Grafana User: {{ grafana_user }}'
-       - 'Grafana Password: {{ grafana_password }}'
+       - 'Grafana User: Log in using OpenShift user'
