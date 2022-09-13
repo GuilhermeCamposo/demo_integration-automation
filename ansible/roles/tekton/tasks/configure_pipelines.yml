@@ -112,6 +112,11 @@
     resource_definition: "{{ lookup('template', 'tekton_task_argo.yml.j2') }}"
 
 - name: Evaluate salesforce-webhook-ingestor Pipeline
+  retries: 5
+  delay: 10
+  register: result
+  until:
+    - result.failed == false
   k8s:
     api_key: '{{ token }}'
     host: '{{ server }}'
@@ -120,6 +125,11 @@
     resource_definition: "{{ lookup('template', 'tekton_pipeline_ingestor.yml.j2') }}"
 
 - name: Evaluate asana-adapter Pipeline
+  retries: 5
+  delay: 10
+  register: result
+  until:
+    - result.failed == false
   k8s:
     api_key: '{{ token }}'
     host: '{{ server }}'

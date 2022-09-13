@@ -31,4 +31,4 @@
        - '------------------------------------------'
        - 'ArgoCD: Log in using OpenShift user'
        - '------------------------------------------'
-       - 'Grafana User: Log in using OpenShift user'
+       - 'Grafana: Log in using OpenShift user'

@@ -23,7 +23,7 @@
 
     - name: Define domain
       set_fact:
-        domain : "{{ server | regex_replace('https://api.') | regex_replace(':6443')   }}"
+        domain : "{{ server | regex_replace('https://api.') | regex_replace(':6443') }}"
 
     - name: Evaluate {{ demo_project }} Namespace
       when: not delete_demo
