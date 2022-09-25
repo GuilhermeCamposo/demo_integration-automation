@@ -28,6 +28,11 @@
     resource_definition: "{{ lookup('template', 'secret_salesforce.yml.j2') }}"
 
 - name: Evaluate salesforce-webhook-ingestor GitOps Application
+  retries: 5
+  delay: 20
+  register: result
+  until:
+    - result.failed == false
   k8s:
     api_key: '{{ token }}'
     host: '{{ server }}'

@@ -389,7 +389,7 @@ spec:
           "targets": [
             {
               "exemplar": true,
-              "expr": "CamelExchangesTotal_total{ service=\"$service\", instance=\"$instance\"}",
+              "expr": "CamelExchangesTotal_total{ service=\"$service\", instance=\"$instance\", routeId=\"$routeId\"}",
               "interval": "",
               "legendFormat": "",
               "refId": "A"
@@ -413,16 +413,8 @@ spec:
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
-                  },
-                  {
-                    "color": "#EAB839",
-                    "value": 5
-                  },
-                  {
                     "color": "red",
-                    "value": 10
+                    "value": null
                   }
                 ]
               }
@@ -455,7 +447,7 @@ spec:
           "targets": [
             {
               "exemplar": true,
-              "expr": "CamelExchangesFailuresHandled_total{service=\"$service\", instance=\"$instance\"}",
+              "expr": "CamelExchangesFailuresHandled_total{service=\"$service\", instance=\"$instance\", routeId=\"$routeId\"}",
               "interval": "",
               "legendFormat": "",
               "refId": "A"
@@ -475,11 +467,6 @@ spec:
         "list": [
           {
             "allValue": null,
-            "current": {
-              "selected": false,
-              "text": "salesforce-webhook-ingestor",
-              "value": "salesforce-webhook-ingestor"
-            },
             "datasource": null,
             "definition": "label_values(service)",
             "description": null,
@@ -506,11 +493,6 @@ spec:
           },
           {
             "allValue": null,
-            "current": {
-              "selected": false,
-              "text": "10.131.0.100:8080",
-              "value": "10.131.0.100:8080"
-            },
             "datasource": null,
             "definition": "label_values(jvm_memory_used_bytes{service=\"$service\"}, instance)",
             "description": null,
@@ -523,6 +505,32 @@ spec:
             "options": [],
             "query": {
               "query": "label_values(jvm_memory_used_bytes{service=\"$service\"}, instance)",
+              "refId": "StandardVariableQuery"
+            },
+            "refresh": 2,
+            "regex": "",
+            "skipUrlSync": false,
+            "sort": 0,
+            "tagValuesQuery": "",
+            "tags": [],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+          },
+          {
+            "allValue": null,
+            "datasource": null,
+            "definition": "label_values(CamelExchangesTotal_total{service=\"$service\"}, routeId)",
+            "description": null,
+            "error": null,
+            "hide": 0,
+            "includeAll": false,
+            "label": "RouteId",
+            "multi": false,
+            "name": "routeId",
+            "options": [],
+            "query": {
+              "query": "label_values(CamelExchangesTotal_total{service=\"$service\"}, routeId)",
               "refId": "StandardVariableQuery"
             },
             "refresh": 2,

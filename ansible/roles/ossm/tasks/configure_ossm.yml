@@ -97,6 +97,14 @@
         http:
         - match:
           - uri:
+              exact: /tracing
+          route:
+          - destination:
+              host: salesforce-webhook-ingestor
+              port:
+                number: 8080
+        - match:
+          - uri:
               exact: /opportunities
           route:
           - destination:
