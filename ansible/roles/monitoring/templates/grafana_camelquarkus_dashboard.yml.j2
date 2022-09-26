@@ -478,7 +478,9 @@ spec:
             "name": "service",
             "options": [],
             "query": {
-              "query": "label_values(service)",
+{% endraw %}
+              "query": "label_values(jvm_memory_used_bytes{namespace=\"{{ demo_project }}\"}, service)",
+{% raw %}
               "refId": "StandardVariableQuery"
             },
             "refresh": 2,
