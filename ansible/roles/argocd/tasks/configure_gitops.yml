@@ -1,3 +1,17 @@
+- name: Evaluate cluster-admins group
+  k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
+    state: present
+    api_version: user.openshift.io/v1
+    kind: Group
+    definition:
+      metadata:
+        name: cluster-admins
+      users:
+        - opentlc-mgr
+
 - name: Evaluate GitOps Permissions
   k8s:
     api_key: '{{ token }}'
@@ -47,6 +61,15 @@
     validate_certs: no
     state: present
     resource_definition: "{{ lookup('template', 'secret_asana.yml.j2') }}"
+
+- name: Evaluate GitOps Project
+  k8s:
+    api_key: '{{ token }}'
+    host: '{{ server }}'
+    validate_certs: no
+    state: present
+    namespace: openshift-gitops
+    resource_definition: "{{ lookup('file', 'configure_gitops.yml') }}"
 
 - name: Evaluate asana-adapter GitOps Application
   k8s:
