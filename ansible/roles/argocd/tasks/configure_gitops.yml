@@ -62,14 +62,14 @@
     state: present
     resource_definition: "{{ lookup('template', 'secret_asana.yml.j2') }}"
 
-- name: Evaluate GitOps Project
-  k8s:
-    api_key: '{{ token }}'
-    host: '{{ server }}'
-    validate_certs: no
-    state: present
-    namespace: openshift-gitops
-    resource_definition: "{{ lookup('file', 'configure_gitops.yml') }}"
+# - name: Evaluate GitOps Project
+#   k8s:
+#     api_key: '{{ token }}'
+#     host: '{{ server }}'
+#     validate_certs: no
+#     state: present
+#     namespace: openshift-gitops
+#     resource_definition: "{{ lookup('file', 'configure_gitops.yml') }}"
 
 - name: Evaluate asana-adapter GitOps Application
   k8s:
