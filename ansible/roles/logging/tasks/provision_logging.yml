@@ -157,7 +157,7 @@
           inputs:
             - application:
                 namespaces:
-                  - rhi-demo
+                  - '{{ demo_project }}'
               name: myNamespace
           outputDefaults:
             elasticsearch:
